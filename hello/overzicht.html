@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="navbar.css" />
+    <link rel="stylesheet" href="overzicht.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <!-- Navbar Import -->
+    <div id="nav-placeholder"></div>
+    <div id="htmlToAppend">
+    <div class="overalls" >
+      <h3 class="headtext">Overall Scan</h3>
+      <div class="row">
+        <div class="column">
+          <div class="categories-column">
+          <h4 class="subtext">Categories</h4>
+          <p class="amount">14</p>
+          <p class="checked">Last 7 days</p>
+        </div>
+        </div>
+        <div class="column">
+          <div class="total-column">
+          <h4 class="subtext">Total Products</h4>
+          <div class="inline">
+            <div>
+          <p class="amount">868</p>
+          <p class="checked">Last 7 days</p>
+        </div>
+        <div>
+          <p class="amount">€7490</p>
+          <p class="checked">Cost</p>
+        </div>
+        </div>
+        </div>
+        </div>
+        <div class="column">
+      
+      </div>
+      <div class="column">
+      
+      </div>
+    </div>
+  </div>
+  <div class="table">
+    <div class="table-head">
+      <h3 class="table-headtext">Products</h3>
+      <div>
+      <button class="table-button start-monitor">Start Monitor</button>
+      <button class="table-button add-products">Add Products</button>
+      <button class="table-button export">Export</button>
+    </div>
+    </div>
+    <table>
+      <tr>
+        <th>Products</th>
+        <th>Article Number</th>
+        <th>Buying Price</th>
+        <th>Quantity</th>
+        <th>Where</th>
+        <th>Store</th>
+        <th>Date Scan</th>
+        <th>Availibility</th>
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+      <tr>
+        <td>Lv Iconic Neckclase</td>
+        <td>M00596</td>
+        <td>€370</td>
+        <td>5</td>
+        <td>Amsterdam</td>
+        <td>PC Hoofdstraat</td>
+        <td>19/10/2023</td>
+        <td>In-stock</td>
+        
+
+      </tr>
+    
+    </table>
+    <div class="table-bottom">
+        <button class="table-button export">Previous</button>
+        <button class="table-button export">Next</button>
+    </div>
+  </div>
+
+  </body>
+  <script>
+    $(function () {
+      // Load the HTML content into the "nav-placeholder" element
+      $("#nav-placeholder").load("navbar.html", function() {
+        // Callback function executes after the HTML is loaded
+  
+        const mainContent = $("#nav-placeholder .maincontent");
+  
+        // Append the HTML snippet to the loaded content
+        $(htmlToAppend).appendTo(mainContent);
+      });
+    });
+  </script>
+  </html>
+  

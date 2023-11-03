@@ -1,0 +1,108 @@
+.overalls {
+  height: 168px;
+  width: 95%;
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin: 32px auto;
+}
+.headtext {
+  font-weight: 500;
+  margin-left: 10px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+.row {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: flex;
+  width: 100%;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  border-right: 2px solid #f5f5f5;
+}
+
+.categories-column .subtext {
+  color: blue;
+  margin-bottom: 10px;
+}
+.total-column .subtext {
+  color: orange;
+  margin-bottom: 10px;
+}
+.inline {
+  display: flex;
+  gap: 50px;
+}
+.amount {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.checked {
+  color: #5d6679;
+}
+.table {
+  height: 568px;
+  width: 95%;
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin: auto;
+}
+.table-head {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  margin: 10px;
+}
+.table-headtext {
+  font-weight: 500;
+}
+.table-button {
+  width: 120px;
+  height: 35px;
+  border-radius: 4px;
+}
+.start-monitor {
+  background-color: #46d913;
+  color: #ffffff;
+  border: none;
+}
+.add-products {
+  background-color: #1366d9;
+  color: #ffffff;
+  border: none;
+}
+.export {
+  background-color: #ffffff;
+
+  border: 2px solid #d0d3d9;
+}
+table {
+  width: 100%;
+  text-align: center;
+  /* padding: ; */
+}
+table,
+th,
+td {
+  border-bottom: 2px solid #d0d3d9;
+  border-collapse: collapse;
+}
+td,
+th {
+  padding: 10px 50px 10px 10px;
+}
+th {
+  color: #5d6679;
+  font-weight: 500;
+}
+.table-bottom {
+  justify-content: space-between;
+  margin: 10px;
+  padding-bottom: 10px;
+  display: flex;
+}

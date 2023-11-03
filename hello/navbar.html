@@ -4,7 +4,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="navbar.css" />
+
   <!-- Boxicons CDN Link (Icon link) -->
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
   <div class="sidebar">
     <div class="logo-details">
       <div class="logo_name"><img src="img/navbar canva design.png" position="absolute" width="90%" height="10%"></div>
-      <i class='bx bx-menu openhud' id="btn"></i>
+      <i class='bx bx-menu' id="btn"></i>
     </div>
     <ul class="nav-list">
       <li>
@@ -51,6 +52,23 @@
       </li>
     </ul>
   </div>
+  <div class="maincontent">
+    <div class="topbar">
+      <div class="topbar-items"> 
+        <div class="searchbox">
+        <i class="bx bx-search"></i>
+        <input type="search" name="search" placeholder="Search product, order">
+      </div>
+      <div class="float-right">
+        <i class="bx-sizer bx bx-bell"></i>
+        <img class="avatar" src="img/avatar.png ">
+      </div>
+  </div>
+  </div>
+  </div>
+
+
+  
   <script>
     let sidebar = document.querySelector(".sidebar");
     let closeBtn = document.querySelector("#btn");
@@ -61,10 +79,10 @@
       menuBtnChange(); //calling the function(optional)
     });
 
-    searchBtn.addEventListener("click", () => { // Sidebar open when you click on the search iocn
-      sidebar.classList.toggle("open");
-      menuBtnChange(); //calling the function(optional)
-    });
+    // searchBtn.addEventListener("click", () => { // Sidebar open when you click on the search iocn
+    //   sidebar.classList.toggle("open");
+    //   menuBtnChange(); //calling the function(optional)
+    // });
 
     // following are the code to change sidebar button(optional)
     function menuBtnChange() {
