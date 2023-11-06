@@ -55,7 +55,7 @@
       <h3 class="table-headtext">Products</h3>
       <div>
       <button class="table-button start-monitor">Start Monitor</button>
-      <button class="table-button add-products">Add Products</button>
+      <button class="table-button add-products" id="myBtn">Add Products</button>
       <button class="table-button export">Export</button>
     </div>
     </div>
@@ -187,8 +187,63 @@
     </div>
   </div>
 
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <form class="formAddProduct">
+    <span class="close">&times;</span>
+    <h2>New Item</h2>
+    <div class="form-group">
+      <label class="label-ProductName"> Product Name</label><br>
+      <input id="pname" class="pname" type="text" class="form-control" name="pname" placeholder="Enter product name"  />
+      </div>
+      <div class="form-group">
+        <label class="label-ProductId"> Product ID</label><br>
+        <input id="pid" class="pid" type="text" class="form-control" name="pid" placeholder="Enter product id"  />
+        </div>
+        <div class="form-group">
+          <label class="label-Categories"> Categories</label><br>
+          <input id="categories" class="categories" type="text" class="form-control" name="categories" placeholder="Enter Category"  />
+          </div>
+
+          <div class="modalbtn">
+          <button class="mbtn export">Discard</button>
+          <button class="mbtn add-products">Add item</button>
+        </div>
+        </form>
+  </div>
+
+</div>
+
   </body>
   <script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
     $(function () {
       // Load the HTML content into the "nav-placeholder" element
       $("#nav-placeholder").load("navbar.html", function() {
