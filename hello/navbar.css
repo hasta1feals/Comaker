@@ -160,6 +160,17 @@
 .sidebar li a:hover {
   background: #25248b;
 }
+.active {
+  background: #25248b;
+
+}
+.sidebar li a.active .links_name,
+.sidebar li a.active i{
+  color: #fff;
+}
+.active:hover{
+  
+}
 .sidebar li a .links_name {
   color: #5d6679;
   font-weight: 400;

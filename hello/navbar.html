@@ -12,6 +12,7 @@
 </head>
 
 <body>
+  
   <!-- Nav bar -->
   <div class="sidebar">
     <div class="logo-details">
@@ -20,14 +21,14 @@
     </div>
     <ul class="nav-list">
       <li>
-        <a href="../Klant/klant.php">
+        <a class="nav-link" href="#">
           <i class='bx bxs-dashboard'></i>
           <span class="links_name">Dashboard</span>
         </a>
         <span class="tooltip">Dashboard</span>
       </li>
       <li>
-        <a href="../projectaanmaak/projectaanmaak.php">
+        <a class="nav-link" href="overzicht.html">
           <i class='bx bx-desktop'></i>
           <span class="links_name">Monitor</span>
         </a>
@@ -70,6 +71,7 @@
 
   
   <script>
+    
     let sidebar = document.querySelector(".sidebar");
     let closeBtn = document.querySelector("#btn");
     let searchBtn = document.querySelector(".bx-search");
@@ -92,6 +94,21 @@
         closeBtn.classList.replace("bx-menu-alt-right", "bx-menu"); //replacing the iocns class
       }
     }
+
+    $(document).ready(function() {
+        let allLinks = $(".nav-link").map(function() {
+            return this; // Fetch all elements that have the .nav-link class and add them to our list.
+        }).get();
+        console.log(allLinks);
+        // Iterate through each of the links we fetched.
+        $.each(allLinks, function(key, value) {
+            if (value.href == document.URL) { // If the href attribute for this link matches the current page URL.
+                $(this).html(value.classList.add("active") ); // Adjust the HTML of the element and append a suffix to the end, or do anything else here as required.
+              console.log(value.classList);
+              }
+        });
+    });
+    
   </script>
 </body>
 
