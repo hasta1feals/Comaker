@@ -1,4 +1,6 @@
 
+userData=[]
+
 
 function login() {
   // Fetch data from html
@@ -14,7 +16,9 @@ function login() {
       setCookie("token", res.token, 365);
       console.log("het is gelukt")
       console.log(res.token)
-      getUsers();
+      // getUsers();
+      Userinfo();
+     console.log(userData)
       // showPage("dashboardPage");
     } else {
       alert("Credentials are incorrect");
@@ -82,7 +86,12 @@ function Userinfo() {
       
   api("secure").then((res) => {
     if (res.message == "success") {
-      console.log(res.decoded.email.email, res.decoded.email.id)
+
+
+      console.log(res.decoded.user.username);
+      console.log(res.decoded.user.name);
+      userData.push(res.decoded.user.username, res.decoded.user.name);
+
     }
 
   });
