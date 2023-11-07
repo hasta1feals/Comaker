@@ -78,13 +78,11 @@ function getUsers() {
 
 
 
-
-
 function Userinfo() {
-
+      
   api("secure").then((res) => {
     if (res.message == "success") {
-      console.log(res.decoded.user)
+      console.log(res.decoded.email.email, res.decoded.email.id)
     }
 
   });
@@ -93,8 +91,13 @@ function Userinfo() {
 //you can add all the buttons you want to connect to the api or button functions
 document.addEventListener("DOMContentLoaded", function () {
   connectButton("my-button1", Userinfo);
-  connectButton("my-button", login);
   connectButton("loginButton", login);
+  connectButton("my-buttonRegisteren", createPost);
+  connectButton("start-scan", emailVal);
+
+
+
+
 
 
 });
@@ -162,6 +165,5 @@ function getValue(id) {
   }
   return "";
 }
-
 
 
