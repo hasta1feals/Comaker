@@ -1,0 +1,191 @@
+.overalls {
+  height: 168px;
+  width: 95%;
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin: 32px auto;
+}
+.headtext {
+  font-weight: 500;
+  margin-left: 10px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+.row {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: flex;
+  width: 100%;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+  border-right: 2px solid #f5f5f5;
+}
+
+.categories-column .subtext {
+  color: blue;
+  margin-bottom: 10px;
+}
+.total-column .subtext {
+  color: orange;
+  margin-bottom: 10px;
+}
+.inline {
+  display: flex;
+  gap: 50px;
+}
+.amount {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.checked {
+  color: #5d6679;
+}
+.table {
+  height: 568px;
+  width: 95%;
+  background-color: #ffffff;
+  border-radius: 5px;
+  margin: auto;
+}
+.table-head {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  margin: 10px;
+}
+.table-headtext {
+  font-weight: 500;
+}
+.table-button {
+  width: 120px;
+  height: 35px;
+  border-radius: 4px;
+}
+.start-monitor {
+  background-color: #46d913;
+  color: #ffffff;
+  border: none;
+}
+.add-products {
+  background-color: #1366d9;
+  color: #ffffff;
+  border: none;
+}
+.export {
+  background-color: #ffffff;
+
+  border: 2px solid #d0d3d9;
+}
+table {
+  width: 100%;
+  text-align: center;
+  /* padding: ; */
+}
+table,
+th,
+td {
+  border-bottom: 2px solid #d0d3d9;
+  border-collapse: collapse;
+}
+td,
+th {
+  padding: 10px 50px 10px 10px;
+}
+th {
+  color: #5d6679;
+  font-weight: 500;
+}
+.table-bottom {
+  justify-content: space-between;
+  margin: 10px;
+  padding-bottom: 10px;
+  display: flex;
+}
+
+button:hover {
+  cursor: pointer;
+}
+.start-monitor:hover {
+  background-color: rgb(55, 202, 6);
+}
+.add-products:hover {
+  background-color: #0553c1;
+}
+.export:hover {
+  background-color: #f5f5f5;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+  height: 45%;
+  border-radius: 3px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 1000px;
+}
+.form-group{
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  font-weight: 500;
+
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.formAddProduct input[type="text"]
+{
+    width: 220px;
+    height: 30px;
+    outline: none;
+    border: 1px solid #D0D5DD;
+    border-radius: 3px;
+    color: #1366d9;
+    font-weight: bold;
+   
+  
+}.modalbtn{
+  
+  text-align: right;
+}
+.mbtn{
+  width: 100px;
+  height: 30px;
+  border-radius: 3px;
+}
