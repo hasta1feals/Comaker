@@ -97,6 +97,8 @@ app.get('/secure', (req, res) => {
 
 
 
+
+
 app.post('/register', (req, res) => {
   // get user data from request body
   const { username, password, name } = req.body;
@@ -119,6 +121,44 @@ app.post('/register', (req, res) => {
     );
   });
 });
+
+
+app.post('/link', (req, res) => {
+  // get user data from request body
+  const { link } = req.body;
+ 
+  
+    // create a new user in the database
+    db.run(
+      'INSERT INTO links  (links) VALUES (?)',
+      [link],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: 'Error setting links in links' });
+        }
+        res.json({ message: 'success' });
+      }
+    );
+  });
+
+
+  app.patch('/city', (req, res) => {
+    // get user data from request body
+    const { city } = req.body;
+   
+    
+      // create a new user in the database
+      db.run(
+        'UPDATE country SET city = ? WHERE id = 1',
+        [city],
+        function (err) {
+          if (err) {
+            return res.status(500).json({ error: 'Error setting city in country' });
+          }
+          res.json({ message: 'success' });
+        }
+      );
+    });
 
 
 

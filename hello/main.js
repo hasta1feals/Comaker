@@ -1,6 +1,77 @@
 
 userData=[]
 
+function exportTableToExcel(tableID, filename = "") {
+  console.log("exportTableToExcel") 
+  var downloadLink;
+  var dataType = "application/vnd.ms-excel";
+  var tableSelect = document.getElementById(tableID);
+  var tableHTML = tableSelect.outerHTML.replace(/ /g, "%20");
+
+  // Specify file name
+  filename = filename ? filename + ".xls" : "excel_data.xls";
+
+  //create dowanliad link element
+  downloadLink = document.createElement("a");
+
+  document.body.appendChild(downloadLink);
+  if (navigator.msSaveOrOpenBlob) {
+    var blob = new Blob(["\ufeff", tableHTML], {
+      type: dataType,
+    });
+    navigator.msSaveOrOpenBlob(blob, filename);
+  } else {
+    // Create a link to the file
+    downloadLink.href = "data:" + dataType + ", " + tableHTML;
+
+    // Setting the file name
+    downloadLink.download = filename;
+
+    //triggering the function
+    downloadLink.click();
+  }
+}
+
+
+function createLinks() {
+  console.log("createLinks")
+  const data = {
+    link: getValue("links")
+   };
+   console.log(data)
+ 
+   api("link", "POST", data).then((res) => {
+     if (res.message == "success") {
+       // Save the received JWT in a cookie
+      
+       console.log("het is gelukt")
+     
+   
+     } else {
+       alert("mislukt");
+     }
+   });
+ }
+
+ function createCity() {
+ 
+  const data = {
+    city: getValue("pid")
+   };
+   console.log(data)
+ 
+   api("city", "PATCH", data).then((res) => {
+     if (res.message == "success") {
+       // Save the received JWT in a cookie
+      
+       console.log("het is gelukt")
+     
+   
+     } else {
+       alert("mislukt");
+     }
+   });
+ }
 
 function login() {
   // Fetch data from html
@@ -18,14 +89,38 @@ function login() {
       console.log(res.token)
       // getUsers();
       Userinfo();
-     console.log(userData)
-      // showPage("dashboardPage");
+     x=  getCookie("token");
+      console.log(x)
+      window.location.href = "overzicht.html";
+
     } else {
       alert("Credentials are incorrect");
     }
   });
+
 }
 
+
+document.addEventListener('DOMContentLoaded', function () {
+  const dataContainer = document.getElementById("klaas");
+  
+  const token = getCookie("token"); // Retrieve the token from the cookie
+  
+  if (!token) {
+    // Handle the case where the token is missing or invalid
+    dataContainer.textContent = "Unauthorized: Token is missing or invalid";
+  } else {
+    api("secure", "GET", {}, { Authorization: `Bearer ${token}` }).then((res) => {
+      if (res.message === "success") {
+        dataContainer.textContent = res.decoded.user.name;
+        console.log();
+      } else {
+        // Handle any errors or unauthorized access
+        dataContainer.textContent = "Unauthorized: Token is invalid or expired";
+      }
+    });
+  }
+});
 
 async function createPost() {
  const data = {
@@ -48,6 +143,8 @@ async function createPost() {
   });
 }
 
+
+ 
 
 function register(e) {
   // Fetch data from html
@@ -102,8 +199,10 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("my-button1", Userinfo);
   connectButton("loginButton", login);
   connectButton("my-buttonRegisteren", createPost);
-  connectButton("start-scan", emailVal);
-
+  // connectButton("start-scan", emailVal);
+  connectButton("my-buttonLinks", createLinks)
+  connectButton("my-buttonLinks", createCity);
+// connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 
 
 
@@ -173,6 +272,14 @@ function getValue(id) {
     return element.value;
   }
   return "";
+}
+
+function showPage(id) {
+  let pages = document.getElementsByClassName("container");
+  for (let i = 0; i < pages.length; i++) {
+    pages[i].style.display = "none";
+  }
+  document.getElementById(id).style.display = "block";
 }
 
 
