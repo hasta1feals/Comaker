@@ -153,6 +153,15 @@ button:hover {
   height: 30%;
   border-radius: 3px;
 }
+.modal-monitor{
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+  height: 70%;
+  border-radius: 3px;
+}
 
 /* The Close Button */
 .close {
@@ -189,7 +198,7 @@ button:hover {
    
   
 }
-.formChangeCity input[type="text"]
+.formChangeCity input[type="text"], .city
 {
     width: 220px;
     height: 30px;
@@ -209,4 +218,21 @@ button:hover {
   width: 100px;
   height: 30px;
   border-radius: 3px;
+}
+.monitor-list{
+  height: 140px;
+  overflow: hidden;
+  overflow-y: scroll  ;
+  margin-bottom: 20px;
+}
+ul.monitor-list li {
+  color: black;
+}
+ul.monitor-list li:nth-child(odd) {
+  background-color: aliceblue;
+}
+.delete{
+  color: red;
+  float: right;
+  padding-right: 15px;
 }
