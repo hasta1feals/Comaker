@@ -57,31 +57,32 @@
       <p id="klaas">14 products</p>
       <div>
       <button class="table-button start-monitor">Start Monitor</button>
+      <button class="table-button change-city" id="myBtn2">Change city</button>
       <button class="table-button add-products" id="myBtn">Add Products</button>
       <button class="table-button export" id="export-table">Export</button>
     </div>
     </div>
     <table id="tabel-items">
       <tr>
-        <th>Products</th>
-        <th>Article Number</th>
-        <th>Buying Price</th>
-        <th>Quantity</th>
+        <th>Item</th>
+        <th>Store</th>
+        <th>Availibility</th>
+        <!-- <th>Quantity</th>
         <th>Where</th>
         <th>Store</th>
         <th>Date Scan</th>
-        <th>Availibility</th>
+        <th>Availibility</th> -->
 
       </tr>
       <tr>
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
-        <td>In-stock</td>
+        <td>In-stock</td> -->
         
 
       </tr>
@@ -89,11 +90,11 @@
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
-        <td>In-stock</td>
+        <td>In-stock</td> -->
         
 
       </tr>
@@ -101,11 +102,11 @@
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
-        <td>In-stock</td>
+        <td>In-stock</td> -->
         
 
       </tr>
@@ -113,72 +114,72 @@
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
         <td>In-stock</td>
-        
+         -->
 
       </tr>
       <tr>
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
         <td>In-stock</td>
-        
+         -->
 
       </tr>
       <tr>
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
         <td>In-stock</td>
-        
+         -->
 
       </tr>
       <tr>
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
         <td>In-stock</td>
-        
+         -->
 
       </tr>
       <tr>
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
         <td>In-stock</td>
-        
+         -->
 
       </tr>
       <tr>
         <td>Lv Iconic Neckclase</td>
         <td>M00596</td>
         <td>€370</td>
-        <td>5</td>
+        <!-- <td>5</td>
         <td>Amsterdam</td>
         <td>PC Hoofdstraat</td>
         <td>19/10/2023</td>
         <td>In-stock</td>
-        
+         -->
 
       </tr>
     
@@ -190,7 +191,7 @@
   </div>
 
 <!-- The Modal -->
-<div id="myModal" class="modal">
+<div id="addProductModal" class="modal">
 
   <!-- Modal content -->
   <div class="modal-content">
@@ -201,10 +202,10 @@
       <label class="label-ProductName"> Product Link</label><br>
       <input id="links" class="pname" type="text" class="form-control" name="pname" placeholder="Enter Link"  />
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label class="label-ProductId"> City</label><br>
         <input id="pid" class="pid" type="text" class="form-control" name="pid" placeholder="Enter City"  />
-        </div>
+        </div> -->
      
 
           <div class="modalbtn">
@@ -213,34 +214,79 @@
         </div>
         </form>
   </div>
+  
 
 </div>
+
+<div id="changeCityModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <form class="formChangeCity">
+    <span class="close close2">&times;</span>
+    <h2>Change city</h2>
+    <div class="form-group">
+      <label class="label-ProductName">change city</label><br>
+      <input id="city" class="pname" type="text" class="form-control" name="city" placeholder="Change city"  />
+      </div>
+      <!-- <div class="form-group"> 
+        <label class="label-ProductId"> City</label><br>
+        <input id="pid" class="pid" type="text" class="form-control" name="pid" placeholder="Enter City"  />
+        </div> -->
+     
+
+          <div class="modalbtn">
+          <button class="mbtn export">Discard</button>
+          <button id="my-buttonLinks" class="mbtn change-city">Change city</button>
+        </div>
+        </form>
+  </div>
+  
+
+</div>
+
 </div>
   </body>
   <script>
 // Get the modal
-var modal = document.getElementById("myModal");
+var modal = document.getElementById("addProductModal");
+var modal2 = document.getElementById("changeCityModal");
+
 
 // Get the button that opens the modal
 var btn = document.getElementById("myBtn");
+var btn2 = document.getElementById("myBtn2");
+
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
+var span2 = document.getElementsByClassName("close2")[0];
+
 
 // When the user clicks the button, open the modal 
 btn.onclick = function() {
   modal.style.display = "block";
 }
+btn2.onclick = function() {
+  modal2.style.display = "block";
+}
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
   modal.style.display = "none";
+  
+}
+span2.onclick = function() {
+  modal2.style.display = "none";
+  
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-  if (event.target == modal) {
+  if (event.target == modal || event.target == modal2) {
     modal.style.display = "none";
+    modal2.style.display = "none";
+
   }
 }
     $(function () {
