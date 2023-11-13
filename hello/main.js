@@ -36,7 +36,7 @@ function exportTableToExcel(tableID, filename = "") {
 function createLinks() {
   console.log("createLinks")
   const data = {
-    link: getValue("links")
+    link: getValue("links-links")
    };
    console.log(data)
  
@@ -56,7 +56,7 @@ function createLinks() {
  function createCity() {
  
   const data = {
-    city: getValue("pid")
+    city: getValue("city-city")
    };
    console.log(data)
  
@@ -200,8 +200,8 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("loginButton", login);
   connectButton("my-buttonRegisteren", createPost);
   // connectButton("start-scan", emailVal);
-  connectButton("my-buttonLinks", createLinks)
-  connectButton("my-buttonLinks", createCity);
+  connectButton("add-Links", createLinks)
+  connectButton("add-city", createCity);
 // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 
 
