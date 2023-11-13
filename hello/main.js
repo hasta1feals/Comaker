@@ -33,6 +33,28 @@ function exportTableToExcel(tableID, filename = "") {
 }
 
 
+
+
+function getCity() { 
+
+  api("city", "GET").then((res) => {
+    if (res.message === "success") {
+      const select = document.getElementById("citySelect");
+
+      for (let i = 0; i < res.rows.length; i++) {
+        const data = res.rows[i];
+        var option = document.createElement("option");
+        option.text = data.city;
+        select.add(option);
+      }
+
+
+    }
+
+  });
+}
+
+
 function itemsLoad() {
   api("items", "GET").then((res) => {
     console.log(res); // Log the entire response to the console
@@ -154,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (res.message === "success") {
         dataContainer.textContent = res.decoded.user.name;
         itemsLoad();
+        getCity();
       } else {
         // Handle any errors or unauthorized access
         dataContainer.textContent = "Unauthorized: Token is invalid or expired";

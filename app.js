@@ -45,6 +45,18 @@ app.get('/items', (req, res) => {
 
 
 
+app.get('/city', (req, res) => {
+  db.all('SELECT * FROM country', (err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching city' });
+    } else {
+      res.json({ message: 'success', rows });
+    }
+  });
+});
+
+
+
 
 
 const secret = process.env.SECRET_KEY;
