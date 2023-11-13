@@ -33,6 +33,46 @@ function exportTableToExcel(tableID, filename = "") {
 }
 
 
+function itemsLoad() {
+  api("items", "GET").then((res) => {
+    console.log(res); // Log the entire response to the console
+
+    if (res.message === "success") {
+
+      const table = document.getElementById("myTable");
+
+
+      for (let i = 0; i < res.rows.length; i++) {
+        const data = res.rows[i];
+
+        // Create an empty <tr> element and add it to the 1st position of the table:
+        var row = table.insertRow(i + 1);
+        // Insert new cells (<td> elements) at the 1st, 2nd, and 3rd position of the "new" <tr> element:
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+
+        // Add some text to the new cells:
+        cell1.innerHTML = data.lv_item;
+        cell2.innerHTML = data.lv_store;
+        cell4.innerHTML = data.date_recent;
+
+
+        if (data.lv_stock === "Sin existencias") {
+          cell3.style.backgroundColor = "red";
+          cell3.textContent = "OUT OF STOCK";
+        } else {
+          cell3.style.backgroundColor = "green";
+          cell3.textContent = "IN STOCK";
+        }
+      }
+    }
+  }).catch((error) => {
+    console.error("Error fetching items:", error);
+  });
+}
+
 function createLinks() {
   console.log("createLinks")
   const data = {
@@ -99,6 +139,29 @@ function login() {
   });
 
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  const dataContainer = document.getElementById("klaas");
+  
+  
+  const token = getCookie("token"); // Retrieve the token from the cookie
+  
+  if (!token) {
+    // Handle the case where the token is missing or invalid
+    dataContainer.textContent = "Unauthorized: Token is missing or invalid";
+  } else {
+    api("secure", "GET", {}, { Authorization: `Bearer ${token}` }).then((res) => {
+      if (res.message === "success") {
+        dataContainer.textContent = res.decoded.user.name;
+        itemsLoad();
+      } else {
+        // Handle any errors or unauthorized access
+        dataContainer.textContent = "Unauthorized: Token is invalid or expired";
+      }
+    });
+  }
+});
+
 
 
 document.addEventListener('DOMContentLoaded', function () {

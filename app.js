@@ -33,6 +33,18 @@ app.get('/users', (req, res) => {
 });
 
 
+app.get('/items', (req, res) => {
+  db.all('SELECT * FROM Items', (err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching items' });
+    } else {
+      res.json({ message: 'success', rows });
+    }
+  });
+});
+
+
+
 
 
 const secret = process.env.SECRET_KEY;
