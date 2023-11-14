@@ -66,6 +66,32 @@
   height: 35px;
   border-radius: 4px;
 }
+.pagination {
+  margin-bottom: auto;
+  bottom: 27px;
+  left: 50%;
+  position: absolute;
+  text-align: center;
+}
+.pagination-button {
+  position: relative;
+  left: -50%;
+  height: 35px;
+  font-weight: 500;
+  width: 35px;
+  background-color: #25248b;
+  color: #ffffff;
+  border: none;
+}
+.pagination-button:hover {
+  opacity: 0.8;
+}
+.float-right-number{
+  position:absolute;
+  right: 50px;
+  bottom: 35px;
+}
+
 .mbtn-export {
   width: 100px;
   height: 30px;
@@ -80,7 +106,7 @@
   border: none;
 }
 
-.delete-monitor{
+.delete-monitor {
   background-color: #ff0000;
   color: #ffffff;
   border: none;
@@ -91,7 +117,7 @@
   border: none;
 }
 .change-city {
-  background-color: #FFA500;
+  background-color: #ffa500;
   color: #ffffff;
   border: none;
 }
@@ -135,7 +161,7 @@ button:hover {
 .add-products:hover {
   background-color: #0553c1;
 }
-.change-city:hover{
+.change-city:hover {
   background-color: #db8f01;
 }
 .export:hover {
@@ -153,8 +179,8 @@ button:hover {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content */
@@ -167,7 +193,7 @@ button:hover {
   height: 30%;
   border-radius: 3px;
 }
-.modal-monitor{
+.modal-monitor {
   background-color: #fefefe;
   margin: auto;
   padding: 20px;
@@ -185,12 +211,11 @@ button:hover {
   font-weight: bold;
   margin-bottom: 1000px;
 }
-.form-group{
+.form-group {
   display: flex;
   justify-content: space-between;
   margin: 20px 0;
   font-weight: 500;
-
 }
 
 .close:hover,
@@ -200,43 +225,37 @@ button:hover {
   cursor: pointer;
 }
 
-.formAddProduct input[type="text"]
-{
-    width: 220px;
-    height: 30px;
-    outline: none;
-    border: 1px solid #D0D5DD;
-    border-radius: 3px;
-    color: #1366d9;
-    font-weight: bold;
-   
-  
+.formAddProduct input[type="text"] {
+  width: 220px;
+  height: 30px;
+  outline: none;
+  border: 1px solid #d0d5dd;
+  border-radius: 3px;
+  color: #1366d9;
+  font-weight: bold;
 }
-.formChangeCity input[type="text"], .city
-{
-    width: 220px;
-    height: 30px;
-    outline: none;
-    border: 1px solid #D0D5DD;
-    border-radius: 3px;
-    color: #FFA500;
-    font-weight: bold;
-   
-  
+.formChangeCity input[type="text"],
+.city {
+  width: 220px;
+  height: 30px;
+  outline: none;
+  border: 1px solid #d0d5dd;
+  border-radius: 3px;
+  color: #ffa500;
+  font-weight: bold;
 }
-.modalbtn{
-  
+.modalbtn {
   text-align: right;
 }
-.mbtn{
+.mbtn {
   width: 100px;
   height: 30px;
   border-radius: 3px;
 }
-.monitor-list{
+.monitor-list {
   height: 140px;
   overflow: hidden;
-  overflow-y: scroll  ;
+  overflow-y: scroll;
   margin-bottom: 20px;
 }
 ul.monitor-list li {
@@ -245,10 +264,15 @@ ul.monitor-list li {
 ul.monitor-list li:nth-child(odd) {
   background-color: aliceblue;
 }
-.delete{
+.delete {
   color: red;
   float: right;
   padding-right: 15px;
 }
+.out-of-stock {
+  color: red;
+}
 
-
+.in-stock {
+  color: green;
+}

@@ -1,8 +1,7 @@
-
-userData = []
+userData = [];
 
 function exportTableToExcel(tableID, filename = "") {
-  console.log("exportTableToExcel")
+  console.log("exportTableToExcel");
   var downloadLink;
   var dataType = "application/vnd.ms-excel";
   var tableSelect = document.getElementById(tableID);
@@ -32,11 +31,7 @@ function exportTableToExcel(tableID, filename = "") {
   }
 }
 
-
-
-
 function getCity() {
-
   api("city", "GET").then((res) => {
     if (res.message === "success") {
       const select = document.getElementById("citySelect");
@@ -47,10 +42,7 @@ function getCity() {
         option.text = data.city;
         select.add(option);
       }
-
-
     }
-
   });
 }
 
@@ -74,14 +66,13 @@ function getAllLinks() {
 
         // Attach a click event listener to the li element
 
-
         // Attach a click event listener to the delete button
-        deleteButton.addEventListener("click", function(event) {
+        deleteButton.addEventListener("click", function (event) {
           // Prevent li click event when delete button is clicked
           event.stopPropagation();
-          
+
           // Call your delete API or remove the li element as needed
-          deleteLink(data.id); 
+          deleteLink(data.id);
         });
 
         li.appendChild(deleteButton);
@@ -93,11 +84,6 @@ function getAllLinks() {
   });
 }
 
-
-
-
-
-
 function deleteLink(linkId) {
   api("links_specific", "DELETE", { id: linkId }).then((res) => {
     if (res.message === "success") {
@@ -107,11 +93,7 @@ function deleteLink(linkId) {
       console.log("failed");
     }
   });
-
-
-
 }
-
 
 function deleteItemAll() {
   api("items", "DELETE").then((res) => {
@@ -133,62 +115,93 @@ function deleteLinksAll() {
   });
 }
 
-
+const TableRowsPerPage = 9;
+let currentTablePage = 1;
 
 function itemsLoad() {
-  api("items", "GET").then((res) => {
-    console.log(res); // Log the entire response to the console
+  api("items", "GET")
+    .then((res) => {
+      console.log(res.rows); // Log the entire response to the console
+      
+      totalPages= (res.rows.length / TableRowsPerPage)
+      totalPageNumber = Math.ceil(totalPages)
+      console.log(totalPageNumber);
+      console.log(currentTablePage +" table numbr")
 
-    if (res.message === "success") {
+      const pageCounter = document.querySelector("#pageAmount");
+      pageCounter.innerHTML = currentTablePage + "/"+ totalPageNumber;
+      
+      if (res.message === "success") {
+        const tableBody = document.querySelector("#myTable tbody");
+        tableBody.innerHTML = "";
 
-      const table = document.getElementById("myTable");
-
-
-      for (let i = 0; i < res.rows.length; i++) {
-        const data = res.rows[i];
-
-        // Create an empty <tr> element and add it to the 1st position of the table:
-        var row = table.insertRow(i + 1);
-        // Insert new cells (<td> elements) at the 1st, 2nd, and 3rd position of the "new" <tr> element:
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-
-        // Add some text to the new cells:
-        cell1.innerHTML = data.lv_item;
-        cell2.innerHTML = data.lv_store;
-        cell4.innerHTML = data.date_recent;
+        const startIndex = (currentTablePage - 1) * TableRowsPerPage;
+        const endIndex = startIndex + TableRowsPerPage;
 
 
-        if (data.lv_stock === "Sin existencias") {
-          cell3.style.backgroundColor = "red";
-          cell3.textContent = "OUT OF STOCK";
-        } else {
-          cell3.style.backgroundColor = "green";
-          cell3.textContent = "IN STOCK";
+        for (let i = startIndex; i < endIndex && i < res.rows.length; i++) {
+          const row = document.createElement("tr");
+          for (const key in res.rows[i]) {
+            //exlcude the id field
+            if (key !== "id") {
+              const cell = document.createElement("td");
+
+              //translate in stock
+              if (key === "lv_stock") {
+                cell.textContent = res.rows[i][key] === "Sin existencias" ? "Out of stock" : "In Stock";
+                cell.className = res.rows[i][key] === "Sin existencias" ? "out-of-stock" : "in-stock";
+
+              } else {
+                cell.textContent = res.rows[i][key];
+              }
+              row.appendChild(cell);
+            }
+          }
+          tableBody.appendChild(row);
         }
+        rowCount = res.rows.length
+        updatePaginationButtons(rowCount, endIndex);
       }
-    }
-  }).catch((error) => {
-    console.error("Error fetching items:", error);
-  });
+    })
+    .catch((error) => {
+      console.error("Error fetching items:", error);
+    });
+}
+function nextTablePage() {
+
+  currentTablePage++;
+  itemsLoad();
+  updatePaginationButtons();
+}
+
+function previousTablePage() {
+  if (currentTablePage > 1) {
+    currentTablePage--;
+    itemsLoad();
+    updatePaginationButtons();
+  }
+}
+
+function updatePaginationButtons(rowCount, endIndex) {
+  const prevButton = document.getElementById("prevButton");
+  const nextButton = document.getElementById("nextButton");
+
+  prevButton.disabled = currentTablePage === 1;
+  nextButton.disabled = rowCount < endIndex;
 }
 
 function createLinks() {
-  console.log("createLinks")
+  console.log("createLinks");
   const data = {
-    link: getValue("links-links")
+    link: getValue("links-links"),
   };
-  console.log(data)
+  console.log(data);
 
   api("link", "POST", data).then((res) => {
     if (res.message == "success") {
       // Save the received JWT in a cookie
 
-      console.log("het is gelukt")
-
-
+      console.log("het is gelukt");
     } else {
       alert("mislukt");
     }
@@ -196,19 +209,16 @@ function createLinks() {
 }
 
 function createCity() {
-
   const data = {
-    city: getValue("city-city")
+    city: getValue("city-city"),
   };
-  console.log(data)
+  console.log(data);
 
   api("city", "PATCH", data).then((res) => {
     if (res.message == "success") {
       // Save the received JWT in a cookie
 
-      console.log("het is gelukt")
-
-
+      console.log("het is gelukt");
     } else {
       alert("mislukt");
     }
@@ -227,142 +237,116 @@ function login() {
     if (res.message == "success") {
       // Save the received JWT in a cookie
       setCookie("token", res.token, 365);
-      console.log("het is gelukt")
-      console.log(res.token)
+      console.log("het is gelukt");
+      console.log(res.token);
       // getUsers();
       Userinfo();
       x = getCookie("token");
-      console.log(x)
+      console.log(x);
       window.location.href = "overzicht.html";
-
     } else {
       alert("Credentials are incorrect");
     }
   });
-
 }
 
 // here is where we add all the function we want to run when the log in successful
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   const dataContainer = document.getElementById("klaas");
   const token = getCookie("token"); // Retrieve the token from the cookie
   if (!token) {
     // Handle the case where the token is missing or invalid
     dataContainer.textContent = "Unauthorized: Token is missing or invalid";
   } else {
-    api("secure", "GET", {}, { Authorization: `Bearer ${token}` }).then((res) => {
-      if (res.message === "success") {
-        x = this.getElementById("testvuilnis")
-        dataContainer.textContent = res.decoded.user.name;
-        itemsLoad();
-        getCity();
-        getAllLinks();
-      } else {
-        // Handle any errors or unauthorized access
-        dataContainer.textContent = "Unauthorized: Token is invalid or expired";
+    api("secure", "GET", {}, { Authorization: `Bearer ${token}` }).then(
+      (res) => {
+        if (res.message === "success") {
+          x = this.getElementById("testvuilnis");
+          dataContainer.textContent = res.decoded.user.name;
+          itemsLoad();
+          getCity();
+          getAllLinks();
+        } else {
+          // Handle any errors or unauthorized access
+          dataContainer.textContent =
+            "Unauthorized: Token is invalid or expired";
+        }
       }
-    });
+    );
   }
 });
-
-
-
 
 async function createPost() {
   const data = {
     password: getValue("password"),
     username: getValue("title1"),
-    name: getValue("name")
-
+    name: getValue("name"),
   };
 
   api("register", "POST", data).then((res) => {
     if (res.message == "success") {
       // Save the received JWT in a cookie
 
-      console.log("het is gelukt")
-
-
+      console.log("het is gelukt");
     } else {
       alert("Credentials are incorrect");
     }
   });
 }
 
-
-
-
 function register(e) {
   // Fetch data from html
   data = {
     password: getValue("password"),
     username: getValue("title1"),
-    name: getValue("name")
-
+    name: getValue("name"),
   };
   // Submit data to API
 
   api("register", "POST", data).then((res) => {
     if (res.message == "success") {
-
       // Save the received JWT in a cookie
-      console.log("het is gelukt")
+      console.log("het is gelukt");
       getUsers();
-      return false
+      return false;
     } else {
       alert("you left something empty");
-      return falseS
+      return falseS;
     }
   });
   return false;
 }
 
-
 //after login you can load in the users stuff
-function getUsers() {
-
-}
-
-
+function getUsers() {}
 
 function Userinfo() {
-
   api("secure").then((res) => {
     if (res.message == "success") {
-
-
       console.log(res.decoded.user.username);
       console.log(res.decoded.user.name);
       userData.push(res.decoded.user.username, res.decoded.user.name);
-
     }
-
   });
-
 }
 //you can add all the buttons you want to connect to the api or button functions
 document.addEventListener("DOMContentLoaded", function () {
   connectButton("loginButton", login);
   connectButton("my-buttonRegisteren", createPost);
   // connectButton("start-scan", emailVal);
-  connectButton("add-Links", createLinks)
+  connectButton("add-Links", createLinks);
   connectButton("add-city", createCity);
   connectButton("myBtn4", deleteItemAll);
   connectButton("deletbutton123", deleteLinksAll);
+  connectButton("prevButton", previousTablePage);
+  connectButton("nextButton", nextTablePage);
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
-
-
-
-
-
 });
 
 const submitHandler = async (event) => {
-  event.preventDefault()
-  console.log("submit")
-}
-
-
+  event.preventDefault();
+  console.log("submit");
+};
 
 //api function to get infro from the server to frontend
 function api(endpoint, method = "GET", data = {}) {
@@ -378,10 +362,6 @@ function api(endpoint, method = "GET", data = {}) {
   }).then((res) => res.json());
 }
 
-
-
-
-
 // Cookie functions stolen from w3schools (https://www.w3schools.com/js/js_cookies.asp)
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
@@ -389,8 +369,6 @@ function setCookie(cname, cvalue, exdays) {
   let expires = "expires=" + d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-
-
 
 function getCookie(cname) {
   let name = cname + "=";
@@ -406,7 +384,6 @@ function getCookie(cname) {
   }
   return "";
 }
-
 
 function connectButton(id, event) {
   let element = document.getElementById(id);
@@ -430,5 +407,3 @@ function showPage(id) {
   }
   document.getElementById(id).style.display = "block";
 }
-
-
