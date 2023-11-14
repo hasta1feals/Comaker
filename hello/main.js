@@ -349,7 +349,6 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("add-city", createCity);
   connectButton("myBtn4", deleteItemAll);
   connectButton("deletbutton123", deleteLinksAll);
-  connectButton("export-table", exportTableToExcel("myTable", "table"));
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 
 
