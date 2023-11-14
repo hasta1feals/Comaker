@@ -43,6 +43,57 @@ app.get('/items', (req, res) => {
   });
 });
 
+app.get('/links', (req, res) => {
+  db.all('SELECT * FROM links', (err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching links' });
+    } else {
+      res.json({ message: 'success', rows });
+    }
+  });
+});
+
+
+app.get('/items_specific', (req, res) => {
+  const id = req.body.id;
+
+  qry = "SELECT * FROM Items where id = ?"
+  db.all(qry, [id],(err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching items' });
+    } else {
+      res.json({ message: 'success', rows });
+    }
+  });
+});
+
+
+app.get('/link_specific', (req, res) => {
+  const id = req.body.id;
+
+  qry = "SELECT * FROM links where id = ?"
+  db.all(qry, [id],(err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching items' });
+    } else {
+      res.json({ message: 'success', rows });
+    }
+  });
+});
+
+app.delete('/link', (req, res) => {
+  const id = req.body.id;
+
+  qry = "DELETE FROM links WHERE id = ? "
+  db.all(qry, [id],(err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching items' });
+    } else {
+      res.json({ message: 'success', rows });
+    }
+  });
+});
+
 
 
 app.get('/city', (req, res) => {

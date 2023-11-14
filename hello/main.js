@@ -55,6 +55,55 @@ function getCity() {
 }
 
 
+function getAllLinks() {
+  api("links", "GET").then((res) => {
+    if (res.message === "success") {
+      const ul = document.getElementById("testx");
+
+      for (let i = 0; i < res.rows.length; i++) {
+        const data = res.rows[i];
+        var li = document.createElement("li");
+        li.textContent = data.links;
+
+        // Create a delete button
+        var deleteButton = document.createElement("span");
+        deleteButton.className = "delete";
+        var deleteIcon = document.createElement("i");
+        deleteIcon.id = "testvuilnis";
+        deleteIcon.className = "bx bx-trash";
+        deleteButton.appendChild(deleteIcon);
+
+        // Attach a click event listener to the delete button
+        deleteButton.addEventListener("click", function() {
+          // Call your delete API or remove the li element as needed
+          deleteLink(data.id); // Replace with your actual delete function
+        });
+
+        li.appendChild(deleteButton);
+        ul.appendChild(li);
+      }
+    } else {
+      console.log("failed");
+    }
+  });
+}
+
+
+function deleteLink(linkId) {
+  api("link", "DELETE", { id: linkId }).then((res) => {
+    if (res.message === "success") {
+      // Remove the li element from the DOM
+      document.getElementById(linkId).remove();
+    } else {
+      console.log("failed");
+    }
+  });
+
+
+
+  console.log("Deleting link with ID: ", linkId);
+}
+
 function itemsLoad() {
   api("items", "GET").then((res) => {
     console.log(res); // Log the entire response to the console
@@ -174,9 +223,11 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     api("secure", "GET", {}, { Authorization: `Bearer ${token}` }).then((res) => {
       if (res.message === "success") {
-        dataContainer.textContent = res.decoded.user.name;
+        x = this.getElementById("testvuilnis")
+  
         itemsLoad();
         getCity();
+        getAllLinks();
       } else {
         // Handle any errors or unauthorized access
         dataContainer.textContent = "Unauthorized: Token is invalid or expired";
@@ -187,26 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
-  const dataContainer = document.getElementById("klaas");
-  
-  const token = getCookie("token"); // Retrieve the token from the cookie
-  
-  if (!token) {
-    // Handle the case where the token is missing or invalid
-    dataContainer.textContent = "Unauthorized: Token is missing or invalid";
-  } else {
-    api("secure", "GET", {}, { Authorization: `Bearer ${token}` }).then((res) => {
-      if (res.message === "success") {
-        dataContainer.textContent = res.decoded.user.name;
-        console.log();
-      } else {
-        // Handle any errors or unauthorized access
-        dataContainer.textContent = "Unauthorized: Token is invalid or expired";
-      }
-    });
-  }
-});
 
 async function createPost() {
  const data = {
