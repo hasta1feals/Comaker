@@ -73,13 +73,7 @@ function getAllLinks() {
         deleteButton.appendChild(deleteIcon);
 
         // Attach a click event listener to the li element
-        li.addEventListener("click", function() {
-          // Call your function when the li is clicked
-          handleClick(data.id); //
-          
-          // Highlight the clicked li by adding a class( for later use)
-          li.classList.add("clicked-li");
-        });
+
 
         // Attach a click event listener to the delete button
         deleteButton.addEventListener("click", function(event) {
@@ -100,10 +94,7 @@ function getAllLinks() {
 }
 
 
-function handleClick(linkId) {
 
-  console.log("Clicked on link with ID: ", linkId);
-}
 
 
 
