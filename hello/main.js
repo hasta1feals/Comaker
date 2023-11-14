@@ -99,7 +99,7 @@ function getAllLinks() {
 
 
 function deleteLink(linkId) {
-  api("link", "DELETE", { id: linkId }).then((res) => {
+  api("links_specific", "DELETE", { id: linkId }).then((res) => {
     if (res.message === "success") {
       // Remove the li element from the DOM
       document.getElementById(linkId).remove();
@@ -111,6 +111,29 @@ function deleteLink(linkId) {
 
 
 }
+
+
+function deleteItemAll() {
+  api("items", "DELETE").then((res) => {
+    if (res.message === "success") {
+      console.log("het is gelukt");
+    } else {
+      console.log("failed");
+    }
+  });
+}
+
+function deleteLinksAll() {
+  api("links", "DELETE").then((res) => {
+    if (res.message === "success") {
+      console.log("het is gelukt");
+    } else {
+      console.log("failed");
+    }
+  });
+}
+
+
 
 function itemsLoad() {
   api("items", "GET").then((res) => {
@@ -319,12 +342,13 @@ function Userinfo() {
 }
 //you can add all the buttons you want to connect to the api or button functions
 document.addEventListener("DOMContentLoaded", function () {
-  connectButton("my-button1", Userinfo);
   connectButton("loginButton", login);
   connectButton("my-buttonRegisteren", createPost);
   // connectButton("start-scan", emailVal);
   connectButton("add-Links", createLinks)
   connectButton("add-city", createCity);
+  connectButton("myBtn4", deleteItemAll);
+  connectButton("deletbutton123", deleteLinksAll);
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 
 

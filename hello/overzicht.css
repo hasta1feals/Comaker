@@ -66,8 +66,22 @@
   height: 35px;
   border-radius: 4px;
 }
+.mbtn-export {
+  width: 100px;
+  height: 30px;
+  border-radius: 4px;
+  background-color: #ff0000;
+  color: #ffffff;
+  border: none;
+}
 .start-monitor {
   background-color: #46d913;
+  color: #ffffff;
+  border: none;
+}
+
+.delete-monitor{
+  background-color: #ff0000;
   color: #ffffff;
   border: none;
 }

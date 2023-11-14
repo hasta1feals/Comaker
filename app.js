@@ -81,7 +81,7 @@ app.get('/link_specific', (req, res) => {
   });
 });
 
-app.delete('/link', (req, res) => {
+app.delete('/links_specific', (req, res) => {
   const id = req.body.id;
 
   qry = "DELETE FROM links WHERE id = ? "
@@ -93,6 +93,34 @@ app.delete('/link', (req, res) => {
     }
   });
 });
+
+
+app.delete('/items', (req, res) => {
+  const id = req.body.id;
+
+  qry = "DELETE  FROM items  "
+  db.all(qry, [id],(err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching items' });
+    } else {
+      res.json({ message: 'success', rows });
+    }
+  });
+});
+
+app.delete('/links', (req, res) => {
+
+  qry = "DELETE FROM links"
+  db.all(qry,(err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching items' });
+      console.log(err)  
+    } else {
+      res.json({ message: 'success', rows });
+    }
+  });
+});
+
 
 
 
