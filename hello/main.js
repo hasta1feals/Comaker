@@ -1,8 +1,8 @@
 
-userData=[]
+userData = []
 
 function exportTableToExcel(tableID, filename = "") {
-  console.log("exportTableToExcel") 
+  console.log("exportTableToExcel")
   var downloadLink;
   var dataType = "application/vnd.ms-excel";
   var tableSelect = document.getElementById(tableID);
@@ -35,7 +35,7 @@ function exportTableToExcel(tableID, filename = "") {
 
 
 
-function getCity() { 
+function getCity() {
 
   api("city", "GET").then((res) => {
     if (res.message === "success") {
@@ -53,7 +53,6 @@ function getCity() {
 
   });
 }
-
 
 function getAllLinks() {
   api("links", "GET").then((res) => {
@@ -73,10 +72,22 @@ function getAllLinks() {
         deleteIcon.className = "bx bx-trash";
         deleteButton.appendChild(deleteIcon);
 
+        // Attach a click event listener to the li element
+        li.addEventListener("click", function() {
+          // Call your function when the li is clicked
+          handleClick(data.id); //
+          
+          // Highlight the clicked li by adding a class( for later use)
+          li.classList.add("clicked-li");
+        });
+
         // Attach a click event listener to the delete button
-        deleteButton.addEventListener("click", function() {
+        deleteButton.addEventListener("click", function(event) {
+          // Prevent li click event when delete button is clicked
+          event.stopPropagation();
+          
           // Call your delete API or remove the li element as needed
-          deleteLink(data.id); // Replace with your actual delete function
+          deleteLink(data.id); 
         });
 
         li.appendChild(deleteButton);
@@ -87,6 +98,13 @@ function getAllLinks() {
     }
   });
 }
+
+
+function handleClick(linkId) {
+
+  console.log("Clicked on link with ID: ", linkId);
+}
+
 
 
 function deleteLink(linkId) {
@@ -101,7 +119,6 @@ function deleteLink(linkId) {
 
 
 
-  console.log("Deleting link with ID: ", linkId);
 }
 
 function itemsLoad() {
@@ -148,41 +165,41 @@ function createLinks() {
   console.log("createLinks")
   const data = {
     link: getValue("links-links")
-   };
-   console.log(data)
- 
-   api("link", "POST", data).then((res) => {
-     if (res.message == "success") {
-       // Save the received JWT in a cookie
-      
-       console.log("het is gelukt")
-     
-   
-     } else {
-       alert("mislukt");
-     }
-   });
- }
+  };
+  console.log(data)
 
- function createCity() {
- 
+  api("link", "POST", data).then((res) => {
+    if (res.message == "success") {
+      // Save the received JWT in a cookie
+
+      console.log("het is gelukt")
+
+
+    } else {
+      alert("mislukt");
+    }
+  });
+}
+
+function createCity() {
+
   const data = {
     city: getValue("city-city")
-   };
-   console.log(data)
- 
-   api("city", "PATCH", data).then((res) => {
-     if (res.message == "success") {
-       // Save the received JWT in a cookie
-      
-       console.log("het is gelukt")
-     
-   
-     } else {
-       alert("mislukt");
-     }
-   });
- }
+  };
+  console.log(data)
+
+  api("city", "PATCH", data).then((res) => {
+    if (res.message == "success") {
+      // Save the received JWT in a cookie
+
+      console.log("het is gelukt")
+
+
+    } else {
+      alert("mislukt");
+    }
+  });
+}
 
 function login() {
   // Fetch data from html
@@ -200,7 +217,7 @@ function login() {
       console.log(res.token)
       // getUsers();
       Userinfo();
-     x=  getCookie("token");
+      x = getCookie("token");
       console.log(x)
       window.location.href = "overzicht.html";
 
@@ -211,12 +228,10 @@ function login() {
 
 }
 
+// here is where we add all the function we want to run when the log in successful
 document.addEventListener('DOMContentLoaded', function () {
   const dataContainer = document.getElementById("klaas");
-  
-  
   const token = getCookie("token"); // Retrieve the token from the cookie
-  
   if (!token) {
     // Handle the case where the token is missing or invalid
     dataContainer.textContent = "Unauthorized: Token is missing or invalid";
@@ -224,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
     api("secure", "GET", {}, { Authorization: `Bearer ${token}` }).then((res) => {
       if (res.message === "success") {
         x = this.getElementById("testvuilnis")
-  
+        dataContainer.textContent = res.decoded.user.name;
         itemsLoad();
         getCity();
         getAllLinks();
@@ -240,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 async function createPost() {
- const data = {
+  const data = {
     password: getValue("password"),
     username: getValue("title1"),
     name: getValue("name")
@@ -250,10 +265,10 @@ async function createPost() {
   api("register", "POST", data).then((res) => {
     if (res.message == "success") {
       // Save the received JWT in a cookie
-     
+
       console.log("het is gelukt")
-    
-  
+
+
     } else {
       alert("Credentials are incorrect");
     }
@@ -261,7 +276,7 @@ async function createPost() {
 }
 
 
- 
+
 
 function register(e) {
   // Fetch data from html
@@ -275,7 +290,7 @@ function register(e) {
 
   api("register", "POST", data).then((res) => {
     if (res.message == "success") {
-    
+
       // Save the received JWT in a cookie
       console.log("het is gelukt")
       getUsers();
@@ -297,7 +312,7 @@ function getUsers() {
 
 
 function Userinfo() {
-      
+
   api("secure").then((res) => {
     if (res.message == "success") {
 
@@ -319,7 +334,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // connectButton("start-scan", emailVal);
   connectButton("add-Links", createLinks)
   connectButton("add-city", createCity);
-// connectButton("export-table", exportTableToExcel("tabel-items", "table"));
+  // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 
 
 
@@ -327,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-const submitHandler = async(event) => {
+const submitHandler = async (event) => {
   event.preventDefault()
   console.log("submit")
 }
