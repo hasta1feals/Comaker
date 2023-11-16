@@ -115,10 +115,10 @@ function deleteLinksAll() {
   });
 }
 
-const TableRowsPerPage = 9;
+function itemsLoad() {
+  const TableRowsPerPage = 9;
 let currentTablePage = 1;
 
-function itemsLoad() {
   api("items", "GET")
     .then((res) => {
       console.log(res.rows); // Log the entire response to the console
@@ -274,6 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
           itemsLoad();
           getCity();
           getAllLinks();
+          getUsersList();
         } else {
           // Handle any errors or unauthorized access
           dataContainer.textContent =
@@ -324,9 +325,96 @@ function register(e) {
   });
   return false;
 }
-
+let currentTablePageEMP = 1;
+      const TableRowsPerPage = 9;
 //after login you can load in the users stuff
-function getUsers() {}
+function getUsersList() {
+  api("users", "GET")
+  .then((res) => {
+    console.log(res); // Log the entire response to the console
+    let selectedIds = [];
+    const employeeTable = document.querySelector("#employeeTable tbody");
+    employeeTable.innerHTML = "";
+
+    const startIndex = (currentTablePageEMP - 1) * TableRowsPerPage;
+    const endIndex = startIndex + TableRowsPerPage;
+
+    for (let i = startIndex; i < endIndex && i < res.length; i++) {
+      const row = document.createElement("tr");
+
+      // Add a hidden checkbox with the user ID
+      const checkboxCell = document.createElement("td");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "hiddenCheckbox";
+      checkbox.value = res[i].id;
+      checkboxCell.appendChild(checkbox);
+      row.appendChild(checkboxCell);
+
+      // Combine "firstname," "infix," and "lastname" into a single <td>
+      const nameCell = document.createElement("td");
+      const fullName = [res[i].firstname, res[i].infix, res[i].lastname].filter(Boolean).join(" ");
+      nameCell.textContent = fullName;
+      row.appendChild(nameCell);
+
+      // Exclude the "id" field from being displayed
+      for (const key in res[i]) {
+        if (key !== "id" && key !== "firstname" && key !== "infix" && key !== "lastname" && key !== "password") {
+          const cell = document.createElement("td");
+          cell.textContent = res[i][key];
+          row.appendChild(cell);
+        }
+      }
+
+      employeeTable.appendChild(row);
+    }
+
+      // Attach event listener to each checkbox
+      const checkboxes = document.querySelectorAll('.hiddenCheckbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+          if (checkbox.checked) {
+            // console.log("Selected ID:", checkbox.value);
+            selectedIds.push(checkbox.value)
+            // console.log(selectedIds)
+          }
+          else{
+            selectedIds = selectedIds.filter(id => id !== checkbox.value);
+          }
+          console.log(selectedIds)
+
+        });
+      });
+
+      rowCount = res.length; 
+      updatePaginationButtonsEMP(rowCount, endIndex);
+    })
+  .catch((error) => {
+    console.error("Error fetching users:", error);
+  });
+}
+function nextTablePageEMP() {
+
+  currentTablePageEMP++;
+  getUsersList();
+  updatePaginationButtonsEMP();
+}
+
+function previousTablePageEMP() {
+  if (currentTablePageEMP > 1) {
+    currentTablePageEMP--;
+    getUsersList();
+    updatePaginationButtonsEMP();
+  }
+}
+
+function updatePaginationButtonsEMP(rowCount, endIndex) {
+  const prevButton = document.getElementById("prevButtonEMP");
+  const nextButton = document.getElementById("nextButtonEMP");
+
+  prevButton.disabled = currentTablePageEMP === 1;
+  nextButton.disabled = rowCount < endIndex;
+}
 
 function Userinfo() {
   api("secure").then((res) => {
@@ -348,6 +436,8 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("deletbutton123", deleteLinksAll);
   connectButton("prevButton", previousTablePage);
   connectButton("nextButton", nextTablePage);
+  connectButton("prevButtonEMP", previousTablePageEMP);
+  connectButton("nextButtonEMP", nextTablePageEMP);
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });
 
