@@ -75,6 +75,13 @@
   position: absolute;
   text-align: center;
 }
+.pagination-emp{
+  margin-bottom: auto;
+  bottom: 255px;
+  left: 50%;
+  position: absolute;
+  text-align: center;
+}
 .pagination-button {
   position: relative;
   left: -50%;

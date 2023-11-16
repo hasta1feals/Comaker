@@ -345,6 +345,11 @@ display: flex;
   margin-left: 44px;
   padding: 5px 10px 5px 12px;
   border: #f0f1f3 2px solid;
+  
+}
+input::placeholder{
+  color: #25248B;
+  font-weight: bold;
 }
 input[type="search"] {
   width: 400px;

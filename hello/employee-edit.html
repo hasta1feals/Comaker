@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="navbar.css" />
+    <link rel="stylesheet" href="emloyee-edit.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="content-section" id="content1">
+    <!-- Navbar Import -->
+    <div id="nav-placeholder"></div>
+    <div id="htmlToAppend">
+        <div class="login-form">
+            <h1 class="hoofdtekst">Create an account</h1>
+            <div class="form-login">
+            <p class="welkom">Please fill in your credentials.</p>
+            <div class="wrapper">
+                <div class="form-group2">
+                    <label class="label-Firstname"> Firstname</label><br>
+                    <input id="Firstname" class="Firstname" type="text" class="form-control" name="firstname" placeholder="Jean"  />
+                </div>
+                <div class="form-group2">
+                    <label class="label-Prefix"> Infix</label><br>
+                    <input id="Prefix" class="Prefix" type="text" class="form-control" name="prefix" placeholder="de"  />
+                </div>
+                <div class="form-group2">
+                    <label class="label-Lastname"> Lastname</label><br>
+                    <input id="Lastname" class="Lastname" type="text" class="form-control" name="lastname" placeholder="Paul"  />
+                    </div>
+            </div>
+                <br>
+                <div class="wrapper-radio">
+                    <div class="form-group3">
+                        <input type="radio" id="Male" name="gender" value="Male">Male 
+                    </div>
+                    <div class="form-group3">
+                        <input type="radio"   id="Female" name="gender"value="Female">Female
+                    </div>
+        </div>
+                <br>
+            <div class="form-group">
+            <label class="label-email"> Email address</label><br>
+            <input id="email1" class="email" type="text" class="form-control" name="email" placeholder="Example@email.com"  />
+            </div>
+            <br>
+            <div class="form-group">
+            <label class="Wachtwoord">Password</label><br>
+            <input type="password" id="password1" class="form-control" name="Wachtwoord" placeholder="****************"  /><br>
+            </div>
+            <div class="bottomline2">
+            <p>Must be atleast be 8 characters</p> 
+          </div> 
+          <div class="buttonline">
+              <button id="loginButton" class="login-button float-right">Edit Employee</button>
+      
+              <button onclick="goBack()"  class="cancel-button float-right">cancel</button>
+             
+          </div>  
+          </div>
+        </div>
+</div>
+
+  </body>
+  <script>
+  function goBack() {
+      window.history.back();
+    }
+    $(function () {
+      // Load the HTML content into the "nav-placeholder" element
+      $("#nav-placeholder").load("navbar.html", function() {
+        // Callback function executes after the HTML is loaded
+  
+        const mainContent = $("#nav-placeholder .maincontent");
+  
+        // Append the HTML snippet to the loaded content
+        $(htmlToAppend).appendTo(mainContent);
+      });
+    });
+
+
+
+    
+  </script>
+    <script src="main.js"></script>
+  </html>
+  

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="navbar.css" />
+    <link rel="stylesheet" href="overzicht.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="content-section" id="content1">
+    <!-- Navbar Import -->
+    <div id="nav-placeholder"></div>
+    <div id="htmlToAppend">
+        <div class="table">
+            <div class="table-head">
+              <h3 class="table-headtext" >Employees </h3>
+              <p id="klaas">14 products dit wordt city</p>
+            
+              <div>
+              <button class="table-button add-products" id="">Add</button>
+              <button class="table-button change-city" id="Edit-employee">Edit</button>
+              <button class="table-button delete-monitor" id="">Delete</button>
+        
+            </div>
+            </div>
+          
+              <table id="myTable">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Email Address</th>
+                    <th>Gender</th>
+                    <th>User Type</th>
+                    <!-- Add more headers if needed -->
+                  </tr>
+                </thead>
+                <tbody>
+                    <td id="table-left-border"><input id="selectAll" class="checkbox" type="checkbox"></td>
+                    <td>test</td>
+                    <td>Test@test.nl</td>
+                    <td>male</td>
+                    <td>Employee</td>
+                  <!-- Rows will be added here -->
+                </tbody>
+              </table>
+              <div class="s">
+              <div class="pagination-emp">
+                <button id="prevButton" class="pagination-button"><</button>
+                <button id="nextButton" class="pagination-button">></button>
+                
+              </div>
+              <p class="float-right-number" id="pageAmount"></p>
+          </div>
+        </div>
+</div>
+
+  </body>
+  <script>
+
+    $(function () {
+      // Load the HTML content into the "nav-placeholder" element
+      $("#nav-placeholder").load("navbar.html", function() {
+        // Callback function executes after the HTML is loaded
+  
+        const mainContent = $("#nav-placeholder .maincontent");
+  
+        // Append the HTML snippet to the loaded content
+        $(htmlToAppend).appendTo(mainContent);
+      });
+    });
+
+
+
+    
+  </script>
+    <script src="main.js"></script>
+  </html>
+  
