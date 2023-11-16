@@ -122,15 +122,23 @@ function itemsLoad() {
   api("items", "GET")
     .then((res) => {
       console.log(res.rows); // Log the entire response to the console
-      
+      // innerhtmls
       totalPages= (res.rows.length / TableRowsPerPage)
       totalPageNumber = Math.ceil(totalPages)
-      console.log(totalPageNumber);
-      console.log(currentTablePage +" table numbr")
 
+      const productAmount = document.querySelector("#product-amount");
+      productAmount.innerHTML = res.rows.length;
+
+      const items = res.rows;
+      const outOfStockCount = items.filter(item => item.lv_stock === "Sin existencias").length;
+      const outOfStock = document.querySelector("#out-of-stock")
+      outOfStock.innerHTML = outOfStockCount;
+      const inStock = document.querySelector("#in-stock")
+      inStock.innerHTML =  items.length - outOfStockCount ;
+      
       const pageCounter = document.querySelector("#pageAmount");
       pageCounter.innerHTML = currentTablePage + "/"+ totalPageNumber;
-      
+      // on succes do this
       if (res.message === "success") {
         const tableBody = document.querySelector("#myTable tbody");
         tableBody.innerHTML = "";

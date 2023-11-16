@@ -51,6 +51,8 @@
       </div> 
       <div class="buttonline">
           <button id="loginButton" class="login-button float-right">Create Account</button>
+  
+          <button onclick="goBack()"  class="cancel-button float-right">cancel</button>
          
       </div>  
       </div>
@@ -62,4 +64,9 @@
     </div>
   </section>
   <script src="main.js"></script>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
 </html>
