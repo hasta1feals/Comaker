@@ -331,7 +331,7 @@ let currentTablePageEMP = 1;
 function getUsersList() {
   api("users", "GET")
   .then((res) => {
-    console.log(res); // Log the entire response to the console
+    // console.log(res); // Log the entire response to the console
     let selectedIds = [];
     const employeeTable = document.querySelector("#employeeTable tbody");
     employeeTable.innerHTML = "";
