@@ -25,8 +25,8 @@
               <p id="klaas">14 products dit wordt city</p>
             
               <div>
-              <button class="table-button add-products" id="">Add</button>
-              <button class="table-button change-city" id="Edit-employee">Edit</button>
+              <button onclick="addEmployeeURL()" class="table-button add-products" id="">Add</button>
+              <button class="table-button change-city" id="editEmployee">Edit</button>
               <button class="table-button delete-monitor" id="">Delete</button>
         
             </div>
@@ -78,7 +78,13 @@
       });
     });
 
+    function addEmployeeURL() {
+            // Specify the URL you want to redirect to
+            var addProductURL = "register.html";
 
+            // Change the window location to the target URL
+            window.location.href = addProductURL;
+        }
 
     
   </script>

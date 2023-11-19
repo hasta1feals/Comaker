@@ -114,10 +114,11 @@ function deleteLinksAll() {
     }
   });
 }
-
-function itemsLoad() {
-  const TableRowsPerPage = 9;
+// const TableRowsPerPage = 9;
 let currentTablePage = 1;
+function itemsLoad() {
+//   const TableRowsPerPage = 9;
+// let currentTablePage = 1;
 
   api("items", "GET")
     .then((res) => {
@@ -325,6 +326,7 @@ function register(e) {
   });
   return false;
 }
+let selectedIds = [];
 let currentTablePageEMP = 1;
       const TableRowsPerPage = 9;
 //after login you can load in the users stuff
@@ -332,7 +334,7 @@ function getUsersList() {
   api("users", "GET")
   .then((res) => {
     // console.log(res); // Log the entire response to the console
-    let selectedIds = [];
+    
     const employeeTable = document.querySelector("#employeeTable tbody");
     employeeTable.innerHTML = "";
 
@@ -393,6 +395,8 @@ function getUsersList() {
     console.error("Error fetching users:", error);
   });
 }
+
+
 function nextTablePageEMP() {
 
   currentTablePageEMP++;
@@ -414,6 +418,53 @@ function updatePaginationButtonsEMP(rowCount, endIndex) {
 
   prevButton.disabled = currentTablePageEMP === 1;
   nextButton.disabled = rowCount < endIndex;
+}
+
+
+function editEmployeeButton(){
+  selectedId = selectedIds[0]
+  console.log(selectedId)
+
+  if (selectedId === undefined) {
+    // The array is empty
+    alert("Select a user to Edit")
+} else{
+  getEmployee(selectedId)
+  window.location.href = "employee-edit.html";
+  // getEmployee(selectedId)
+}
+
+}
+
+function getEmployee(selectedId){
+
+  const data = {
+    id: selectedId
+  }
+
+  api("user", "GET", data)
+  .then((res) => {
+  
+    console.log(res)
+
+  });
+}
+
+function editEmployee() {
+  const data = {
+    city: getValue("city-city"),
+  };
+  console.log(data);
+
+  api("city", "PATCH", data).then((res) => {
+    if (res.message == "success") {
+      // Save the received JWT in a cookie
+
+      console.log("het is gelukt");
+    } else {
+      alert("mislukt");
+    }
+  });
 }
 
 function Userinfo() {
@@ -438,6 +489,8 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("nextButton", nextTablePage);
   connectButton("prevButtonEMP", previousTablePageEMP);
   connectButton("nextButtonEMP", nextTablePageEMP);
+  connectButton("editEmployee", editEmployeeButton);
+
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });
 

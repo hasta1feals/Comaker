@@ -32,6 +32,18 @@ app.get('/users', (req, res) => {
   });
 });
 
+app.get('/user', (req, res) => {
+  const id = req.body.id;
+
+  db.all('SELECT * FROM users where id = ?', (err, rows) => {
+    if (err) {
+      res.status(500).send({ error: 'Error fetching users' });
+    } else {
+      res.send(rows);
+    }
+  });
+});
+
 
 app.get('/items', (req, res) => {
   db.all('SELECT * FROM Items', (err, rows) => {
