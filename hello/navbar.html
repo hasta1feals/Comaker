@@ -34,6 +34,7 @@
         </a>
         <span class="tooltip">Monitor</span>
       </li>
+      <!-- this section is admin only -->
       <li>
         <a class="nav-link" href="register.html">
           <i class='bx bxs-user-account'></i>
@@ -48,7 +49,7 @@
         </a>
         <span class="tooltip">Edit Users</span>
       </li>
-
+      <!-- end of admin only section -->
       <li class="profile">
         <div class="profile-details">
 
@@ -121,6 +122,14 @@
     });
     
   </script>
+   <script src="main.js"></script>
+   <script>
+     // Call the Userinfo function from main.js
+     Userinfo();
+   
+     // Log the globalUserData object
+     console.log(globalUserData);
+   </script>
 </body>
 
 </html>

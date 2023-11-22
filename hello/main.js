@@ -467,15 +467,44 @@ function editEmployee() {
   });
 }
 
-function Userinfo() {
-  api("secure").then((res) => {
-    if (res.message == "success") {
-      console.log(res.decoded.user.username);
-      console.log(res.decoded.user.name);
-      userData.push(res.decoded.user.username, res.decoded.user.name);
+const globalUserData = {};
+
+async function Userinfo() {
+  try {
+    const res = await api("secure");
+    if (res.message === "success") {
+      const { password, admin, ...userDataWithoutPassword } = res.decoded.user;
+      Object.assign(globalUserData, userDataWithoutPassword);
+
+      // Check if the user is an admin
+      if (admin === 0) {
+        // Show the admin-only elements in the sidebar
+        showAdminNavbarElements();
+      } else {
+        // Hide the admin-only elements in the sidebar
+        hideAdminNavbarElements();
+      }
+
+      console.log(globalUserData);
     }
-  });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
 }
+
+function showAdminNavbarElements() {
+  // Logic to show admin-only elements in the sidebar
+  $(".nav-link[href='register.html']").parent("li").show();
+  $(".nav-link[href='employee-edit-select.html']").parent("li").show();
+}
+
+function hideAdminNavbarElements() {
+  // Logic to hide admin-only elements in the sidebar
+  $(".nav-link[href='register.html']").parent("li").hide();
+  $(".nav-link[href='employee-edit-select.html']").parent("li").hide();
+}
+
+
 //you can add all the buttons you want to connect to the api or button functions
 document.addEventListener("DOMContentLoaded", function () {
   connectButton("loginButton", login);
