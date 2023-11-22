@@ -216,8 +216,8 @@ app.get('/secure', (req, res) => {
 
 app.post('/register', (req, res) => {
   // get user data from request body
-  const { username, password, name } = req.body;
-
+  const { firstname, lastname, inifx, email, gender,password   } = req.body;
+  const admin = 0;
   // Hash the password
   bcrypt.hash(password, saltRounds, function (err, hashedPassword) {
     if (err) {
@@ -225,8 +225,8 @@ app.post('/register', (req, res) => {
     }
     // create a new user in the database
     db.run(
-      'INSERT INTO users (username, password, name) VALUES (?, ?, ?)',
-      [username, hashedPassword, name],
+      'INSERT INTO users (firstname, lastname, infix,email,gender, password, admin) VALUES (?, ?, ?,?,?,?,?)',
+      [firstname, lastname,  inifx,email, gender, hashedPassword,admin],
       function (err) {
         if (err) {
           return res.status(500).json({ error: 'Error creating user' });
