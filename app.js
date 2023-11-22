@@ -156,12 +156,12 @@ const secret = process.env.SECRET_KEY;
 
 app.post('/login', (req, res) => {
   // Get data from request
-  const username = req.body.username;
+  const email = req.body.email;
   const password = req.body.password;
 
   // Get user from database
-  const qry = 'SELECT * FROM `users` WHERE `username` = ?'
-  db.get(qry, [username], (err, user) => {
+  const qry = 'SELECT * FROM `users` WHERE `email` = ?'
+  db.get(qry, [email], (err, user) => {
     if (err) {
       return res.status(500).json({ message: 'Error while fetching user from the database' });
     }

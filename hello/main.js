@@ -238,7 +238,7 @@ function login() {
   // Fetch data from html
   data = {
     password: getValue("password1"),
-    username: getValue("email1"),
+    email: getValue("email1"),
   };
   // Submit data to API
 
