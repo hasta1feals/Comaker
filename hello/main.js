@@ -85,7 +85,7 @@ function getAllLinks() {
 }
 
 function deleteLink(linkId) {
-  api("links_specific", "DELETE", { id: linkId }).then((res) => {
+  api("links_specific", "DELETE", { id: linkId }).then((res) => { // toperer
     if (res.message === "success") {
       // Remove the li element from the DOM
       document.getElementById(linkId).remove();
@@ -117,28 +117,30 @@ function deleteLinksAll() {
 // const TableRowsPerPage = 9;
 let currentTablePage = 1;
 function itemsLoad() {
-//   const TableRowsPerPage = 9;
-// let currentTablePage = 1;
+  //   const TableRowsPerPage = 9;
+  // let currentTablePage = 1;
 
   api("items", "GET")
     .then((res) => {
       console.log(res.rows); // Log the entire response to the console
       // innerhtmls
-      totalPages= (res.rows.length / TableRowsPerPage)
-      totalPageNumber = Math.ceil(totalPages)
+      totalPages = res.rows.length / TableRowsPerPage;
+      totalPageNumber = Math.ceil(totalPages);
 
       const productAmount = document.querySelector("#product-amount");
       productAmount.innerHTML = res.rows.length;
 
       const items = res.rows;
-      const outOfStockCount = items.filter(item => item.lv_stock === "Sin existencias").length;
-      const outOfStock = document.querySelector("#out-of-stock")
+      const outOfStockCount = items.filter(
+        (item) => item.lv_stock === "Sin existencias"
+      ).length;
+      const outOfStock = document.querySelector("#out-of-stock");
       outOfStock.innerHTML = outOfStockCount;
-      const inStock = document.querySelector("#in-stock")
-      inStock.innerHTML =  items.length - outOfStockCount ;
-      
+      const inStock = document.querySelector("#in-stock");
+      inStock.innerHTML = items.length - outOfStockCount;
+
       const pageCounter = document.querySelector("#pageAmount");
-      pageCounter.innerHTML = currentTablePage + "/"+ totalPageNumber;
+      pageCounter.innerHTML = currentTablePage + "/" + totalPageNumber;
       // on succes do this
       if (res.message === "success") {
         const tableBody = document.querySelector("#myTable tbody");
@@ -146,7 +148,6 @@ function itemsLoad() {
 
         const startIndex = (currentTablePage - 1) * TableRowsPerPage;
         const endIndex = startIndex + TableRowsPerPage;
-
 
         for (let i = startIndex; i < endIndex && i < res.rows.length; i++) {
           const row = document.createElement("tr");
@@ -157,9 +158,14 @@ function itemsLoad() {
 
               //translate in stock
               if (key === "lv_stock") {
-                cell.textContent = res.rows[i][key] === "Sin existencias" ? "Out of stock" : "In Stock";
-                cell.className = res.rows[i][key] === "Sin existencias" ? "out-of-stock" : "in-stock";
-
+                cell.textContent =
+                  res.rows[i][key] === "Sin existencias"
+                    ? "Out of stock"
+                    : "In Stock";
+                cell.className =
+                  res.rows[i][key] === "Sin existencias"
+                    ? "out-of-stock"
+                    : "in-stock";
               } else {
                 cell.textContent = res.rows[i][key];
               }
@@ -168,7 +174,7 @@ function itemsLoad() {
           }
           tableBody.appendChild(row);
         }
-        rowCount = res.rows.length
+        rowCount = res.rows.length;
         updatePaginationButtons(rowCount, endIndex);
       }
     })
@@ -177,7 +183,6 @@ function itemsLoad() {
     });
 }
 function nextTablePage() {
-
   currentTablePage++;
   itemsLoad();
   updatePaginationButtons();
@@ -326,79 +331,108 @@ function register(e) {
   });
   return false;
 }
+
 let selectedIds = [];
 let currentTablePageEMP = 1;
-      const TableRowsPerPage = 9;
-//after login you can load in the users stuff
+const TableRowsPerPage = 9;
+
+function handleEditButtonClick() {
+  console.log("Button clicked"); // Log to check if the button click is registered
+  editempbutton = true;
+  getUsersList(editempbutton);
+  console.log(selectedIds);
+}
+
+// After login, you can load in the users' stuff
 function getUsersList() {
   api("users", "GET")
-  .then((res) => {
-    // console.log(res); // Log the entire response to the console
-    
-    const employeeTable = document.querySelector("#employeeTable tbody");
-    employeeTable.innerHTML = "";
+    .then((res) => {
+      const employeeTable = document.querySelector("#employeeTable tbody");
+      employeeTable.innerHTML = "";
 
-    const startIndex = (currentTablePageEMP - 1) * TableRowsPerPage;
-    const endIndex = startIndex + TableRowsPerPage;
+      const startIndex = (currentTablePageEMP - 1) * TableRowsPerPage;
+      const endIndex = startIndex + TableRowsPerPage;
 
-    for (let i = startIndex; i < endIndex && i < res.length; i++) {
-      const row = document.createElement("tr");
+      for (let i = startIndex; i < endIndex && i < res.length; i++) {
+        const row = document.createElement("tr");
 
-      // Add a hidden checkbox with the user ID
-      const checkboxCell = document.createElement("td");
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.className = "hiddenCheckbox";
-      checkbox.value = res[i].id;
-      checkboxCell.appendChild(checkbox);
-      row.appendChild(checkboxCell);
+        // Add a hidden checkbox with the user ID
+        const checkboxCell = document.createElement("td");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "hiddenCheckbox";
+        checkbox.value = res[i].id;
+        checkboxCell.appendChild(checkbox);
+        row.appendChild(checkboxCell);
 
-      // Combine "firstname," "infix," and "lastname" into a single <td>
-      const nameCell = document.createElement("td");
-      const fullName = [res[i].firstname, res[i].infix, res[i].lastname].filter(Boolean).join(" ");
-      nameCell.textContent = fullName;
-      row.appendChild(nameCell);
+        // Combine "firstname," "infix," and "lastname" into a single <td>
+        const nameCell = document.createElement("td");
+        const fullName = [res[i].firstname, res[i].infix, res[i].lastname]
+          .filter(Boolean)
+          .join(" ");
+        nameCell.textContent = fullName;
+        row.appendChild(nameCell);
 
-      // Exclude the "id" field from being displayed
-      for (const key in res[i]) {
-        if (key !== "id" && key !== "firstname" && key !== "infix" && key !== "lastname" && key !== "password") {
-          const cell = document.createElement("td");
-          cell.textContent = res[i][key];
-          row.appendChild(cell);
+        // Exclude the "id" field from being displayed
+        for (const key in res[i]) {
+          if (
+            key !== "id" &&
+            key !== "firstname" &&
+            key !== "infix" &&
+            key !== "lastname" &&
+            key !== "password"
+          ) {
+            const cell = document.createElement("td");
+            cell.textContent = res[i][key];
+            row.appendChild(cell);
+          }
         }
+
+        employeeTable.appendChild(row);
       }
 
-      employeeTable.appendChild(row);
-    }
-
       // Attach event listener to each checkbox
-      const checkboxes = document.querySelectorAll('.hiddenCheckbox');
-      checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
+      const checkboxes = document.querySelectorAll(".hiddenCheckbox");
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
           if (checkbox.checked) {
-            // console.log("Selected ID:", checkbox.value);
-            selectedIds.push(checkbox.value)
-            // console.log(selectedIds)
+            selectedIds.push(checkbox.value);
+          } else {
+            selectedIds = selectedIds.filter((id) => id !== checkbox.value);
           }
-          else{
-            selectedIds = selectedIds.filter(id => id !== checkbox.value);
-          }
-          console.log(selectedIds)
-
+          console.log(selectedIds);
         });
       });
 
-      rowCount = res.length; 
+      console.log(selectedIds + "  na click");
+
+      // it aint clean but it works skip the console log error; //eric
+      if (editempbutton === true) {
+        if (selectedIds.length > 0) {
+          console.log("Selected IDs after button click: ", selectedIds);
+          
+          localStorage.setItem('selectedEmployeeId', selectedIds[0]);
+          window.location.href = "employee-edit.html";
+
+       
+          editempbutton = false;
+        } else {
+          
+          alert("No user selected for editing");
+
+          editempbutton = false;
+        }
+      }
+
+      rowCount = res.length;
       updatePaginationButtonsEMP(rowCount, endIndex);
     })
-  .catch((error) => {
-    console.error("Error fetching users:", error);
-  });
+    .catch((error) => {
+      console.error("Error fetching users:", error);
+    });
 }
 
-
 function nextTablePageEMP() {
-
   currentTablePageEMP++;
   getUsersList();
   updatePaginationButtonsEMP();
@@ -420,43 +454,65 @@ function updatePaginationButtonsEMP(rowCount, endIndex) {
   nextButton.disabled = rowCount < endIndex;
 }
 
-
-function editEmployeeButton(){
-  selectedId = selectedIds[0]
-  console.log(selectedId)
-
-  if (selectedId === undefined) {
-    // The array is empty
-    alert("Select a user to Edit")
-} else{
-  getEmployee(selectedId)
-  window.location.href = "employee-edit.html";
-  // getEmployee(selectedId)
-}
-
-}
-
-function getEmployee(selectedId){
-
-  const data = {
-    id: selectedId
-  }
-
-  api("user", "GET", data)
-  .then((res) => {
+// 
+document.addEventListener("DOMContentLoaded", function () {
+  // Get the data from localStorage
+  const employeeId = localStorage.getItem('selectedEmployeeId');
   
-    console.log(res)
 
-  });
+  getEmployee(employeeId)
+   // Clear the data from localStorage if needed
+  //  localStorage.removeItem('selectedEmployeeId');
+
+});
+function getEmployee(employeeId) {
+
+  api("employee", "POST", { id: employeeId })
+    .then((res) => {
+      // console.log(res.rows[0]);
+
+      const empFirstname = document.getElementById("Firstname");
+      const empInfix = document.getElementById("Infix");
+      const empLastname = document.getElementById("Lastname");
+      const empEmail = document.getElementById("email1");
+      const empGender = res.rows[0].gender;
+      const empUsertype = res.rows[0].admin;
+      const empUserSelect = document.getElementById("Usertype");
+
+
+      empFirstname.placeholder = res.rows[0].firstname;
+      if(res.rows[0].infix === null){
+        empInfix.placeholder = "";
+      }else{
+      empInfix.placeholder = res.rows[0].infix;
+      }
+      empLastname.placeholder = res.rows[0].lastname;
+      empEmail.placeholder = res.rows[0].email;
+      if (empGender === "male") {
+        document.getElementById("Male").checked = true;
+      } else if (empGender === "female") {
+        document.getElementById("Female").checked = true;
+      }
+      for (let i = 0; i < empUserSelect.options.length; i++) {
+        if (parseInt(empUserSelect.options[i].value) === empUsertype) {
+          empUserSelect.options[i].selected = true;
+          break;
+        }
+      }
+    })
+    .catch((error) => {
+      console.error("Error during API request:", error);
+    });
 }
+
 
 function editEmployee() {
   const data = {
-    city: getValue("city-city"),
+    // city: getValue("city-city"),
   };
   console.log(data);
 
-  api("city", "PATCH", data).then((res) => {
+  api("", "PATCH", data).then((res) => {
     if (res.message == "success") {
       // Save the received JWT in a cookie
 
@@ -477,7 +533,7 @@ async function Userinfo() {
       Object.assign(globalUserData, userDataWithoutPassword);
 
       // Check if the user is an admin
-      if (admin === 0) {
+      if (admin === 1) {
         // Show the admin-only elements in the sidebar
         showAdminNavbarElements();
       } else {
@@ -485,7 +541,7 @@ async function Userinfo() {
         hideAdminNavbarElements();
       }
 
-      console.log(globalUserData);
+      // console.log(globalUserData);
     }
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -504,7 +560,6 @@ function hideAdminNavbarElements() {
   $(".nav-link[href='employee-edit-select.html']").parent("li").hide();
 }
 
-
 //you can add all the buttons you want to connect to the api or button functions
 document.addEventListener("DOMContentLoaded", function () {
   connectButton("loginButton", login);
@@ -518,8 +573,7 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("nextButton", nextTablePage);
   connectButton("prevButtonEMP", previousTablePageEMP);
   connectButton("nextButtonEMP", nextTablePageEMP);
-  connectButton("editEmployee", editEmployeeButton);
-
+  connectButton("editEmployee", handleEditButtonClick);
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });
 

@@ -32,14 +32,17 @@ app.get('/users', (req, res) => {
   });
 });
 
-app.get('/user', (req, res) => {
+app.post('/employee', (req, res) => {
+  console.log(req.body);
   const id = req.body.id;
+  console.log(id);
 
-  db.all('SELECT * FROM users where id = ?', (err, rows) => {
+  qry = "SELECT id, firstname, infix, lastname, email, gender, admin FROM users where id = ?"
+  db.all(qry, [id],(err, rows) => {
     if (err) {
       res.status(500).send({ error: 'Error fetching users' });
     } else {
-      res.send(rows);
+      res.json({ message: 'success', rows });
     }
   });
 });
