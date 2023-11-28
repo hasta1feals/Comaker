@@ -33,9 +33,8 @@ app.get('/users', (req, res) => {
 });
 
 app.post('/employee', (req, res) => {
-  console.log(req.body);
   const id = req.body.id;
-  console.log(id);
+
 
   qry = "SELECT id, firstname, infix, lastname, email, gender, admin FROM users where id = ?"
   db.all(qry, [id],(err, rows) => {

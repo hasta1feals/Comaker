@@ -85,7 +85,8 @@ function getAllLinks() {
 }
 
 function deleteLink(linkId) {
-  api("links_specific", "DELETE", { id: linkId }).then((res) => { // toperer
+  api("links_specific", "DELETE", { id: linkId }).then((res) => {
+    // toperer
     if (res.message === "success") {
       // Remove the li element from the DOM
       document.getElementById(linkId).remove();
@@ -114,15 +115,15 @@ function deleteLinksAll() {
     }
   });
 }
-// const TableRowsPerPage = 9;
-let currentTablePage = 1;
-function itemsLoad() {
-  //   const TableRowsPerPage = 9;
-  // let currentTablePage = 1;
 
+const TableRowsPerPage = 9;
+let currentTablePage = 1;
+
+function itemsLoad(currentTablePage) {
+  console.log(currentTablePage);
   api("items", "GET")
     .then((res) => {
-      console.log(res.rows); // Log the entire response to the console
+      // console.log(res.rows); // Log the entire response to the console
       // innerhtmls
       totalPages = res.rows.length / TableRowsPerPage;
       totalPageNumber = Math.ceil(totalPages);
@@ -184,19 +185,21 @@ function itemsLoad() {
 }
 function nextTablePage() {
   currentTablePage++;
-  itemsLoad();
-  updatePaginationButtons();
+  // console.log(currentTablePage);
+  itemsLoad(currentTablePage);
+  updatePaginationButtons(currentTablePage);
 }
 
 function previousTablePage() {
   if (currentTablePage > 1) {
     currentTablePage--;
-    itemsLoad();
-    updatePaginationButtons();
+    console.log(currentTablePage);
+    itemsLoad(currentTablePage);
+    updatePaginationButtons(currentTablePage);
   }
 }
 
-function updatePaginationButtons(rowCount, endIndex) {
+function updatePaginationButtons(rowCount, endIndex, currentTablePage) {
   const prevButton = document.getElementById("prevButton");
   const nextButton = document.getElementById("nextButton");
 
@@ -277,10 +280,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (res.message === "success") {
           x = this.getElementById("testvuilnis");
           dataContainer.textContent = res.decoded.user.name;
-          itemsLoad();
+          itemsLoad(currentTablePage);
           getCity();
           getAllLinks();
-          getUsersList();
+          getUsersList(currentTablePageEMP);
         } else {
           // Handle any errors or unauthorized access
           dataContainer.textContent =
@@ -334,7 +337,6 @@ function register(e) {
 
 let selectedIds = [];
 let currentTablePageEMP = 1;
-const TableRowsPerPage = 9;
 
 function handleEditButtonClick() {
   console.log("Button clicked"); // Log to check if the button click is registered
@@ -344,16 +346,19 @@ function handleEditButtonClick() {
 }
 
 // After login, you can load in the users' stuff
-function getUsersList() {
+function getUsersList(currentTablePageEMP) {
   api("users", "GET")
     .then((res) => {
+      totalPagesEMP = res.length / TableRowsPerPage;
+      totalPageNumberEMP = Math.ceil(totalPagesEMP);
+      console.log(res.length);
       const employeeTable = document.querySelector("#employeeTable tbody");
       employeeTable.innerHTML = "";
 
-      const startIndex = (currentTablePageEMP - 1) * TableRowsPerPage;
-      const endIndex = startIndex + TableRowsPerPage;
-
-      for (let i = startIndex; i < endIndex && i < res.length; i++) {
+      const startIndexEMP = (currentTablePageEMP - 1) * TableRowsPerPage;
+      const endIndexEMP = startIndexEMP + TableRowsPerPage;
+      console.log(res);
+      for (let i = startIndexEMP; i < endIndexEMP && i < res.length; i++) {
         const row = document.createElement("tr");
 
         // Add a hidden checkbox with the user ID
@@ -383,8 +388,12 @@ function getUsersList() {
             key !== "password"
           ) {
             const cell = document.createElement("td");
-            cell.textContent = res[i][key];
             row.appendChild(cell);
+            if(key === "admin"){
+              cell.textContent = res[i][key] === 1 ? "Admin" : "Employee";
+            }else{
+              cell.textContent = res[i][key];
+            }
           }
         }
 
@@ -403,29 +412,25 @@ function getUsersList() {
           console.log(selectedIds);
         });
       });
-
-      console.log(selectedIds + "  na click");
-
+      const pageCounterEMP = document.querySelector("#pageAmount");
+      pageCounterEMP.innerHTML = currentTablePageEMP + "/" + totalPageNumberEMP;
+      rowCount = res.length;
+      updatePaginationButtonsEMP(rowCount, endIndexEMP);
       // it aint clean but it works skip the console log error; //eric
       if (editempbutton === true) {
         if (selectedIds.length > 0) {
           console.log("Selected IDs after button click: ", selectedIds);
-          
-          localStorage.setItem('selectedEmployeeId', selectedIds[0]);
+
+          localStorage.setItem("selectedEmployeeId", selectedIds[0]);
           window.location.href = "employee-edit.html";
 
-       
           editempbutton = false;
         } else {
-          
           alert("No user selected for editing");
 
           editempbutton = false;
         }
       }
-
-      rowCount = res.length;
-      updatePaginationButtonsEMP(rowCount, endIndex);
     })
     .catch((error) => {
       console.error("Error fetching users:", error);
@@ -434,39 +439,42 @@ function getUsersList() {
 
 function nextTablePageEMP() {
   currentTablePageEMP++;
-  getUsersList();
-  updatePaginationButtonsEMP();
+  getUsersList(currentTablePageEMP);
+  updatePaginationButtonsEMP(currentTablePageEMP);
 }
 
 function previousTablePageEMP() {
+  // console.log("prevButtonEMP click   " + currentTablePageEMP)
   if (currentTablePageEMP > 1) {
     currentTablePageEMP--;
-    getUsersList();
-    updatePaginationButtonsEMP();
+    console.log(currentTablePageEMP);
+    getUsersList(currentTablePageEMP);
+    updatePaginationButtonsEMP(currentTablePageEMP);
   }
 }
 
-function updatePaginationButtonsEMP(rowCount, endIndex) {
+function updatePaginationButtonsEMP(
+  rowCount,
+  endIndexEMP,
+  currentTablePageEMP
+) {
   const prevButton = document.getElementById("prevButtonEMP");
   const nextButton = document.getElementById("nextButtonEMP");
 
   prevButton.disabled = currentTablePageEMP === 1;
-  nextButton.disabled = rowCount < endIndex;
+  nextButton.disabled = rowCount <= endIndexEMP;
 }
 
-// 
+//
 document.addEventListener("DOMContentLoaded", function () {
   // Get the data from localStorage
-  const employeeId = localStorage.getItem('selectedEmployeeId');
-  
+  const employeeId = localStorage.getItem("selectedEmployeeId");
 
-  getEmployee(employeeId)
-   // Clear the data from localStorage if needed
+  getEmployee(employeeId);
+  // Clear the data from localStorage if needed
   //  localStorage.removeItem('selectedEmployeeId');
-
 });
 function getEmployee(employeeId) {
-
   api("employee", "POST", { id: employeeId })
     .then((res) => {
       // console.log(res.rows[0]);
@@ -479,12 +487,11 @@ function getEmployee(employeeId) {
       const empUsertype = res.rows[0].admin;
       const empUserSelect = document.getElementById("Usertype");
 
-
       empFirstname.placeholder = res.rows[0].firstname;
-      if(res.rows[0].infix === null){
+      if (res.rows[0].infix === null) {
         empInfix.placeholder = "";
-      }else{
-      empInfix.placeholder = res.rows[0].infix;
+      } else {
+        empInfix.placeholder = res.rows[0].infix;
       }
       empLastname.placeholder = res.rows[0].lastname;
       empEmail.placeholder = res.rows[0].email;
@@ -504,7 +511,6 @@ function getEmployee(employeeId) {
       console.error("Error during API request:", error);
     });
 }
-
 
 function editEmployee() {
   const data = {
