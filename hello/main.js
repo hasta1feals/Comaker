@@ -339,10 +339,10 @@ let selectedIds = [];
 let currentTablePageEMP = 1;
 
 function handleEditButtonClick() {
-  console.log("Button clicked"); // Log to check if the button click is registered
+  // console.log("Button clicked"); // Log to check if the button click is registered
   editempbutton = true;
   getUsersList(editempbutton);
-  console.log(selectedIds);
+  // console.log(selectedIds);
 }
 
 // After login, you can load in the users' stuff
@@ -351,13 +351,11 @@ function getUsersList(currentTablePageEMP) {
     .then((res) => {
       totalPagesEMP = res.length / TableRowsPerPage;
       totalPageNumberEMP = Math.ceil(totalPagesEMP);
-      console.log(res.length);
       const employeeTable = document.querySelector("#employeeTable tbody");
       employeeTable.innerHTML = "";
 
       const startIndexEMP = (currentTablePageEMP - 1) * TableRowsPerPage;
       const endIndexEMP = startIndexEMP + TableRowsPerPage;
-      console.log(res);
       for (let i = startIndexEMP; i < endIndexEMP && i < res.length; i++) {
         const row = document.createElement("tr");
 
@@ -409,7 +407,7 @@ function getUsersList(currentTablePageEMP) {
           } else {
             selectedIds = selectedIds.filter((id) => id !== checkbox.value);
           }
-          console.log(selectedIds);
+          // console.log(selectedIds);
         });
       });
       const pageCounterEMP = document.querySelector("#pageAmount");
