@@ -267,6 +267,35 @@ function login() {
   });
 }
 
+
+
+
+
+function register() {
+  // Fetch data from html
+  data = {
+    firstname: getValue("firstname2"),
+    infix: getValue("prefix2"),
+    lastname: getValue("lastname2"),
+    email: getValue("email2"),
+    gender: getValue("gender2"),
+    password: getValue("password2"),
+  };
+  // Submit data to API
+
+  api("register", "POST", data).then((res) => {
+    if (res.message == "success") {
+      // Save the received JWT in a cookie
+      
+      console.log("het is gelukt");
+      // getUsers();
+   
+      window.location.href = "overzicht.html";
+    } else {
+      alert("iets gaat fout");
+    }
+  });
+}
 // here is where we add all the function we want to run when the log in successful
 document.addEventListener("DOMContentLoaded", function () {
   const dataContainer = document.getElementById("klaas");
@@ -312,28 +341,7 @@ async function createPost() {
   });
 }
 
-function register(e) {
-  // Fetch data from html
-  data = {
-    password: getValue("password"),
-    username: getValue("title1"),
-    name: getValue("name"),
-  };
-  // Submit data to API
 
-  api("register", "POST", data).then((res) => {
-    if (res.message == "success") {
-      // Save the received JWT in a cookie
-      console.log("het is gelukt");
-      getUsers();
-      return false;
-    } else {
-      alert("you left something empty");
-      return falseS;
-    }
-  });
-  return false;
-}
 
 let selectedIds = [];
 let currentTablePageEMP = 1;
@@ -578,6 +586,7 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("prevButtonEMP", previousTablePageEMP);
   connectButton("nextButtonEMP", nextTablePageEMP);
   connectButton("editEmployee", handleEditButtonClick);
+  connectButton("registerButton",register);
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });
 
