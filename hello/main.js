@@ -1,5 +1,4 @@
 userData = [];
-test =[]
 selectedIds = [];
 
 
@@ -373,12 +372,12 @@ async function createPost() {
 
 let currentTablePageEMP = 1;
 
-function handleEditButtonClick() {
-  // console.log("Button clicked"); // Log to check if the button click is registered
-  editempbutton = true;
-  getUsersList(editempbutton);
-  // console.log(selectedIds);
-}
+// function handleEditButtonClick() {
+//   // console.log("Button clicked"); // Log to check if the button click is registered
+//   editempbutton = true;
+//   getUsersList(editempbutton);
+//   // console.log(selectedIds);
+// }
 
 // After login, you can load in the users' stuff
 function getUsersList(currentTablePageEMP) {
@@ -442,7 +441,6 @@ function getUsersList(currentTablePageEMP) {
           } else {
             selectedIds = selectedIds.filter((id) => id !== checkbox.value);
           }
-          test.push(selectedIds);
           console.log(selectedIds);
 
         });
@@ -451,21 +449,6 @@ function getUsersList(currentTablePageEMP) {
       pageCounterEMP.innerHTML = currentTablePageEMP + "/" + totalPageNumberEMP;
       rowCount = res.length;
       updatePaginationButtonsEMP(rowCount, endIndexEMP);
-      // it aint clean but it works skip the console log error; //eric
-      if (editempbutton === true) {
-        if (selectedIds.length > 0) {
-          console.log("Selected IDs after button click: ", selectedIds);
-
-          localStorage.setItem("selectedEmployeeId", selectedIds[0]);
-          window.location.href = "employee-edit.html";
-
-          editempbutton = false;
-        } else {
-          alert("No user selected for editing");
-
-          editempbutton = false;
-        }
-      }
     })
     .catch((error) => {
       console.error("Error fetching users:", error);
@@ -500,16 +483,24 @@ function updatePaginationButtonsEMP(
   nextButton.disabled = rowCount <= endIndexEMP;
 }
 
-//
-document.addEventListener("DOMContentLoaded", function () {
-  // Get the data from localStorage
-  const employeeId = localStorage.getItem("selectedEmployeeId");
+function getEmployeeID() {
+  console.log(selectedIds);
 
-  getEmployee(employeeId);
-  // Clear the data from localStorage if needed
-  //  localStorage.removeItem('selectedEmployeeId');
-});
-function getEmployee(employeeId) {
+if(selectedIds.length === 0){
+  alert("Choose a employee to edit");
+}else{
+  localStorage.setItem('selectedEmployeeId', selectedIds[0]);
+
+  window.location.href = "employee-edit.html";
+
+}
+}
+document.addEventListener('DOMContentLoaded', function () {
+  // Check if the user is on the employee-edit.html page
+  if (window.location.pathname.includes("employee-edit.html")) {
+    const employeeId = localStorage.getItem('selectedEmployeeId');
+  console.log(employeeId);
+  if(employeeId){
   api("employee", "POST", { id: employeeId })
     .then((res) => {
       // console.log(res.rows[0]);
@@ -530,9 +521,9 @@ function getEmployee(employeeId) {
       }
       empLastname.placeholder = res.rows[0].lastname;
       empEmail.placeholder = res.rows[0].email;
-      if (empGender === "male") {
+      if (empGender === "Male") {
         document.getElementById("Male").checked = true;
-      } else if (empGender === "female") {
+      } else if (empGender === "Female") {
         document.getElementById("Female").checked = true;
       }
       for (let i = 0; i < empUserSelect.options.length; i++) {
@@ -545,24 +536,14 @@ function getEmployee(employeeId) {
     .catch((error) => {
       console.error("Error during API request:", error);
     });
-}
+    
+  }}else {
+    // Handle the case where there's no selected ID
+    console.error("No employee ID found in localStorage");
+  }
+});
 
-function editEmployee() {
-  const data = {
-    // city: getValue("city-city"),
-  };
-  console.log(data);
 
-  api("", "PATCH", data).then((res) => {
-    if (res.message == "success") {
-      // Save the received JWT in a cookie
-
-      console.log("het is gelukt");
-    } else {
-      alert("mislukt");
-    }
-  });
-}
 
 const globalUserData = {};
 
@@ -614,9 +595,10 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("nextButton", nextTablePage);
   connectButton("prevButtonEMP", previousTablePageEMP);
   connectButton("nextButtonEMP", nextTablePageEMP);
-  connectButton("editEmployee", handleEditButtonClick);
+  // connectButton("editEmployee", handleEditButtonClick);
   connectButton("registerButton",register);
   connectButton("deleteButtonUser",deleteUser);
+  connectButton("editEmployee",getEmployeeID);
 
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });

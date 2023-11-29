@@ -133,7 +133,7 @@ div {
 
   
 }
-.form-login .form-group:focus-within{
+.form-login .form-group:focus-within, .form-group2:focus-within{
     border-left: #25248B solid 4px;
 
 }
