@@ -1,4 +1,7 @@
 userData = [];
+test =[]
+selectedIds = [];
+
 
 function exportTableToExcel(tableID, filename = "") {
   console.log("exportTableToExcel");
@@ -30,6 +33,31 @@ function exportTableToExcel(tableID, filename = "") {
     downloadLink.click();
   }
 }
+
+
+
+
+function deleteUser() {
+
+
+console.log(selectedIds);
+  let id = selectedIds[0];
+  for (let i = 0; i < selectedIds.length; i++) {
+    id = selectedIds[i];
+    console.log(id);
+    api("users/" + id, "DELETE").then((res) => {
+      if (res.message === "success") {
+        console.log("het is gelukt");
+      }
+    });
+  }
+  
+}
+
+
+
+
+
 
 function getCity() {
   api("city", "GET").then((res) => {
@@ -343,7 +371,6 @@ async function createPost() {
 
 
 
-let selectedIds = [];
 let currentTablePageEMP = 1;
 
 function handleEditButtonClick() {
@@ -415,7 +442,9 @@ function getUsersList(currentTablePageEMP) {
           } else {
             selectedIds = selectedIds.filter((id) => id !== checkbox.value);
           }
-          // console.log(selectedIds);
+          test.push(selectedIds);
+          console.log(selectedIds);
+
         });
       });
       const pageCounterEMP = document.querySelector("#pageAmount");
@@ -587,6 +616,8 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("nextButtonEMP", nextTablePageEMP);
   connectButton("editEmployee", handleEditButtonClick);
   connectButton("registerButton",register);
+  connectButton("deleteButtonUser",deleteUser);
+
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });
 
