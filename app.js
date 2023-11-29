@@ -280,6 +280,30 @@ app.post('/link', (req, res) => {
 
 
 
+    app.patch('/users', (req, res) => {
+      const { firstname, lastname, email, password, id } = req.body;
+    
+      bcrypt.hash(password, saltRounds, function (err, hashedPassword) {
+        if (err) {
+          return res.status(500).json({ error: 'Error hashing the password' });
+        }
+     
+      // Update user in the database
+      db.run(
+        'UPDATE users SET firstname = ?, lastname = ?, password = ?, email = ? WHERE id = ?;',
+        [firstname, lastname,hashedPassword, email, id],
+        function (err) {
+          if (err) {
+            console.error('Error updating user:', err.message);
+            return res.status(500).json({ error: 'Error updating user' });
+          }
+          console.log(`User with id ${id} updated successfully`);
+          res.json({ message: 'success' });
+        }
+      );
+    });
+  });
+    
 app.put('/users/:id', (req, res) => {
   const { name, email } = req.body;
   const { id } = req.params;

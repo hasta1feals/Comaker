@@ -1,5 +1,6 @@
 userData = [];
 selectedIds = [];
+empId = [];
 
 
 function exportTableToExcel(tableID, filename = "") {
@@ -294,7 +295,46 @@ function login() {
   });
 }
 
+function editUser() {
 
+  if (window.location.pathname.includes("employee-edit.html")) {
+   const employeeId = localStorage.getItem('selectedEmployeeId');
+     empId.push(employeeId);
+   console.log(employeeId);
+
+
+
+   if(employeeId){
+
+
+    data = {
+      id: employeeId,
+      firstname: getValue("firstname4"),
+      infix: getValue("prefix4"),
+      lastname: getValue("lastname2"),
+      email: getValue("email4"),
+      password: getValue("password4"),
+    };
+    // Submit data to API
+  
+    api("users", "PATCH", data).then((res) => {
+      if (res.message == "success") {
+        
+        console.log(employeeId);
+        console.log("het is gelukt");
+        // getUsers();
+     
+        window.location.href = "employee-edit-select.html";
+      } else {
+        alert("iets gaat fout");
+      }
+    });
+   }else {}
+  }
+  // Fetch data from html
+
+
+}
 
 
 
@@ -495,10 +535,17 @@ if(selectedIds.length === 0){
 
 }
 }
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
   // Check if the user is on the employee-edit.html page
   if (window.location.pathname.includes("employee-edit.html")) {
-    const employeeId = localStorage.getItem('selectedEmployeeId');
+   employeeId = localStorage.getItem('selectedEmployeeId');
+    empId.push(employeeId);
   console.log(employeeId);
   if(employeeId){
   api("employee", "POST", { id: employeeId })
@@ -599,7 +646,7 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("registerButton",register);
   connectButton("deleteButtonUser",deleteUser);
   connectButton("editEmployee",getEmployeeID);
-
+  connectButton("loginButton4",editUser);
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });
 
