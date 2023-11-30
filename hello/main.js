@@ -37,10 +37,9 @@ function exportTableToExcel(tableID, filename = "") {
 function startMonitor() {
   console.log("startMonitor");
   apiPy("run-selenium-script", "POST").then((res) => {
-    if (res.message === "Selenium script executed successfully") {
-      console.log("het is gelukt");
-      
-    }
+      if (res.message === "Selenium script executed successfully") {
+          console.log("Het is gelukt!"); // Assuming "Het is gelukt" means "It is successful" in Dutch
+      }
   });
 }
 
@@ -678,26 +677,27 @@ function api(endpoint, method = "GET", data = {}) {
   }).then((res) => res.json());
 }
 
-//api function to get infro from the server to frontend
-function apiPy(endpoint, method = "GET", data = {}) {
-  const API = "http://127.0.0.1:5000/";
-  return fetch(API + endpoint, {
-    method: method,
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + getCookie("token"),
-    },
-    body: method == "GET" ? null : JSON.stringify(data),
-  }).then((res) => res.json());
+function apiPy(endpoint, method) {
+  // Define your API endpoint and method
+  const url = `http://127.0.0.1:5000/${endpoint}`;
+  const requestOptions = {
+      method: method,
+  };
+
+  // Make the asynchronous request
+  return fetch(url, requestOptions)
+      .then(response => response.json())
+      .catch(error => console.error('Error:', error));
 }
+
 // Cookie functions stolen from w3schools (https://www.w3schools.com/js/js_cookies.asp)
-function setCookie(cname, cvalue, exdays) {
-  const d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+function setCookie(cname, cvalue, exdays = 1) {
+  let d = new Date();
+  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000); // Expiration time in milliseconds
   let expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"; // Set the cookie
 }
+
 
 function getCookie(cname) {
   let name = cname + "=";

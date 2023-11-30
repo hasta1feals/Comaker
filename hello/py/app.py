@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask,make_response, request, jsonify
 import pickle
 import undetected_chromedriver as uc
 from selenium import webdriver
@@ -121,7 +121,7 @@ def run_selenium_script():
 
         time.sleep(1)
         search_selector = "#modalContent > div > div.lv-store-geolocation.-modal-full-size > div.lv-address-search-form > form > input"
-        browser.find_element(By.CSS_SELECTOR, search_selector).send_keys("paris")
+        browser.find_element(By.CSS_SELECTOR, search_selector).send_keys(city)
 
         time.sleep(1)
         browser.find_element(By.CSS_SELECTOR, '#modalContent > div > div.lv-store-geolocation.-modal-full-size > div.lv-address-search-form > form > button > svg').click()
@@ -155,6 +155,7 @@ def run_selenium_script():
     return all_extracted_data
 
 @app.route('/run-selenium-script', methods=['POST'])
+
 def run_script_endpoint():
     data = run_selenium_script()
 
@@ -186,7 +187,8 @@ def run_script_endpoint():
             # Extract the second part into lv_stock
             lv_stock =remaining_data[1].strip()
 
-            current_date = datetime.now().strftime("%Y-%m-%d %H")
+            current_date = datetime.now().strftime("%Y-%m-%d %H:%M")
+
 
             # Execute the query with the data
             cursor.execute(insert_query, (lv_item, lv_store, lv_stock, current_date))
@@ -196,15 +198,14 @@ def run_script_endpoint():
 
         # Close the cursor and connection
     cursor.close()
-    conn.close()    
+    conn.close()
     
-
-
-
-
-
-    return jsonify({"message": "Selenium script executed successfully", "data": data})
-
+    response = make_response(jsonify({"message": "Selenium script executed successfully", "data": data}))
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+    
+    return response
 
 # Start app
 if __name__ == '__main__':
