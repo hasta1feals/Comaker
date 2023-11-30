@@ -34,7 +34,15 @@ function exportTableToExcel(tableID, filename = "") {
   }
 }
 
-
+function startMonitor() {
+  console.log("startMonitor");
+  apiPy("run-selenium-script", "POST").then((res) => {
+    if (res.message === "Selenium script executed successfully") {
+      console.log("het is gelukt");
+      
+    }
+  });
+}
 
 
 function deleteUser() {
@@ -647,6 +655,7 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("deleteButtonUser",deleteUser);
   connectButton("editEmployee",getEmployeeID);
   connectButton("loginButton4",editUser);
+  connectButton("my-buttonLinksStart", startMonitor);
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });
 
@@ -669,6 +678,19 @@ function api(endpoint, method = "GET", data = {}) {
   }).then((res) => res.json());
 }
 
+//api function to get infro from the server to frontend
+function apiPy(endpoint, method = "GET", data = {}) {
+  const API = "http://127.0.0.1:5000/";
+  return fetch(API + endpoint, {
+    method: method,
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + getCookie("token"),
+    },
+    body: method == "GET" ? null : JSON.stringify(data),
+  }).then((res) => res.json());
+}
 // Cookie functions stolen from w3schools (https://www.w3schools.com/js/js_cookies.asp)
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
