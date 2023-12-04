@@ -2,7 +2,6 @@ userData = [];
 selectedIds = [];
 empId = [];
 
-
 function exportTableToExcel(tableID, filename = "") {
   console.log("exportTableToExcel");
   var downloadLink;
@@ -37,17 +36,14 @@ function exportTableToExcel(tableID, filename = "") {
 function startMonitor() {
   console.log("startMonitor");
   apiPy("run-selenium-script", "POST").then((res) => {
-      if (res.message === "Selenium script executed successfully") {
-          console.log("Het is gelukt!"); // Assuming "Het is gelukt" means "It is successful" in Dutch
-      }
+    if (res.message === "Selenium script executed successfully") {
+      console.log("Het is gelukt!"); // Assuming "Het is gelukt" means "It is successful" in Dutch
+    }
   });
 }
 
-
 function deleteUser() {
-
-
-console.log(selectedIds);
+  console.log(selectedIds);
   let id = selectedIds[0];
   for (let i = 0; i < selectedIds.length; i++) {
     id = selectedIds[i];
@@ -58,13 +54,7 @@ console.log(selectedIds);
       }
     });
   }
-  
 }
-
-
-
-
-
 
 function getCity() {
   api("city", "GET").then((res) => {
@@ -155,7 +145,7 @@ const TableRowsPerPage = 9;
 let currentTablePage = 1;
 
 function itemsLoad(currentTablePage) {
-  console.log(currentTablePage);
+  // console.log(currentTablePage);
   api("items", "GET")
     .then((res) => {
       // console.log(res.rows); // Log the entire response to the console
@@ -165,6 +155,55 @@ function itemsLoad(currentTablePage) {
 
       const productAmount = document.querySelector("#product-amount");
       productAmount.innerHTML = res.rows.length;
+
+      // console.log(res.rows);
+
+      const mostRecentItem = res.rows.reduce((acc, current) => {
+        const currentDate = new Date(current.date_recent);
+        const accDate = acc ? new Date(acc.date_recent) : null;
+
+        if (!accDate || currentDate > accDate) {
+          return current;
+        } else {
+          return acc;
+        }
+      }, null);
+      // console.log(mostRecentItem["date_recent"]);
+      
+
+      const currentDate = new Date();
+      const recentDate = new Date(mostRecentItem.date_recent);
+      const timeDifferenceInMilliseconds = Math.abs(currentDate - recentDate);
+      const timeDifferenceInSeconds = timeDifferenceInMilliseconds / 1000;
+      const timeDifferenceInMinutes = timeDifferenceInSeconds / 60;
+      const timeDifferenceInHours = timeDifferenceInMinutes / 60;
+
+      let formattedTimeDifference;
+
+      if (timeDifferenceInHours < 24) {
+        formattedTimeDifference = `${Math.round(
+          timeDifferenceInHours
+        )} hours ago`;
+      } else if (timeDifferenceInHours < 720) {
+        // 30 dagen * 24 uren
+        formattedTimeDifference = `${Math.round(
+          timeDifferenceInHours / 24
+        )} days ago`;
+      } else if (timeDifferenceInHours < 17520) {
+        // 730 dagen * 24 uren
+        formattedTimeDifference = `${Math.round(
+          timeDifferenceInHours / 720
+        )} months ago`;
+      } else {
+        formattedTimeDifference = `${Math.round(
+          timeDifferenceInHours / 17520
+        )} years ago`;
+      }
+
+      // console.log(formattedTimeDifference);
+
+      const lastScanned = document.querySelector("#date");
+      lastScanned.innerHTML = formattedTimeDifference;
 
       const items = res.rows;
       const outOfStockCount = items.filter(
@@ -292,7 +331,7 @@ function login() {
       console.log("het is gelukt");
       console.log(res.token);
       // getUsers();
-      Userinfo();
+      // Userinfo();
       x = getCookie("token");
       console.log(x);
       window.location.href = "overzicht.html";
@@ -303,47 +342,38 @@ function login() {
 }
 
 function editUser() {
-
   if (window.location.pathname.includes("employee-edit.html")) {
-   const employeeId = localStorage.getItem('selectedEmployeeId');
-     empId.push(employeeId);
-   console.log(employeeId);
+    const employeeId = localStorage.getItem("selectedEmployeeId");
+    empId.push(employeeId);
+    console.log(employeeId);
 
+    if (employeeId) {
+      data = {
+        id: employeeId,
+        firstname: getValue("firstname4"),
+        infix: getValue("prefix4"),
+        lastname: getValue("lastname2"),
+        email: getValue("email4"),
+        password: getValue("password4"),
+      };
+      // Submit data to API
 
+      api("users", "PATCH", data).then((res) => {
+        if (res.message == "success") {
+          console.log(employeeId);
+          console.log("het is gelukt");
+          // getUsers();
 
-   if(employeeId){
-
-
-    data = {
-      id: employeeId,
-      firstname: getValue("firstname4"),
-      infix: getValue("prefix4"),
-      lastname: getValue("lastname2"),
-      email: getValue("email4"),
-      password: getValue("password4"),
-    };
-    // Submit data to API
-  
-    api("users", "PATCH", data).then((res) => {
-      if (res.message == "success") {
-        
-        console.log(employeeId);
-        console.log("het is gelukt");
-        // getUsers();
-     
-        window.location.href = "employee-edit-select.html";
-      } else {
-        alert("iets gaat fout");
-      }
-    });
-   }else {}
+          window.location.href = "employee-edit-select.html";
+        } else {
+          alert("iets gaat fout");
+        }
+      });
+    } else {
+    }
   }
   // Fetch data from html
-
-
 }
-
-
 
 function register() {
   // Fetch data from html
@@ -360,10 +390,10 @@ function register() {
   api("register", "POST", data).then((res) => {
     if (res.message == "success") {
       // Save the received JWT in a cookie
-      
+
       console.log("het is gelukt");
       // getUsers();
-   
+
       window.location.href = "overzicht.html";
     } else {
       alert("iets gaat fout");
@@ -386,6 +416,7 @@ document.addEventListener("DOMContentLoaded", function () {
           itemsLoad(currentTablePage);
           getCity();
           getAllLinks();
+          Userinfo();
           getUsersList(currentTablePageEMP);
         } else {
           // Handle any errors or unauthorized access
@@ -414,8 +445,6 @@ async function createPost() {
     }
   });
 }
-
-
 
 let currentTablePageEMP = 1;
 
@@ -468,9 +497,9 @@ function getUsersList(currentTablePageEMP) {
           ) {
             const cell = document.createElement("td");
             row.appendChild(cell);
-            if(key === "admin"){
+            if (key === "admin") {
               cell.textContent = res[i][key] === 1 ? "Admin" : "Employee";
-            }else{
+            } else {
               cell.textContent = res[i][key];
             }
           }
@@ -489,7 +518,6 @@ function getUsersList(currentTablePageEMP) {
             selectedIds = selectedIds.filter((id) => id !== checkbox.value);
           }
           console.log(selectedIds);
-
         });
       });
       const pageCounterEMP = document.querySelector("#pageAmount");
@@ -533,73 +561,65 @@ function updatePaginationButtonsEMP(
 function getEmployeeID() {
   console.log(selectedIds);
 
-if(selectedIds.length === 0){
-  alert("Choose a employee to edit");
-}else{
-  localStorage.setItem('selectedEmployeeId', selectedIds[0]);
+  if (selectedIds.length === 0) {
+    alert("Choose a employee to edit");
+  } else {
+    localStorage.setItem("selectedEmployeeId", selectedIds[0]);
 
-  window.location.href = "employee-edit.html";
-
+    window.location.href = "employee-edit.html";
+  }
 }
-}
 
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Check if the user is on the employee-edit.html page
   if (window.location.pathname.includes("employee-edit.html")) {
-   employeeId = localStorage.getItem('selectedEmployeeId');
+    employeeId = localStorage.getItem("selectedEmployeeId");
     empId.push(employeeId);
-  console.log(employeeId);
-  if(employeeId){
-  api("employee", "POST", { id: employeeId })
-    .then((res) => {
-      // console.log(res.rows[0]);
+    console.log(employeeId);
+    if (employeeId) {
+      api("employee", "POST", { id: employeeId })
+        .then((res) => {
+          // console.log(res.rows[0]);
 
-      const empFirstname = document.getElementById("Firstname");
-      const empInfix = document.getElementById("Infix");
-      const empLastname = document.getElementById("Lastname");
-      const empEmail = document.getElementById("email1");
-      const empGender = res.rows[0].gender;
-      const empUsertype = res.rows[0].admin;
-      const empUserSelect = document.getElementById("Usertype");
+          const empFirstname = document.getElementById("Firstname");
+          const empInfix = document.getElementById("Infix");
+          const empLastname = document.getElementById("Lastname");
+          const empEmail = document.getElementById("email1");
+          const empGender = res.rows[0].gender;
+          const empUsertype = res.rows[0].admin;
+          const empUserSelect = document.getElementById("Usertype");
 
-      empFirstname.placeholder = res.rows[0].firstname;
-      if (res.rows[0].infix === null) {
-        empInfix.placeholder = "";
-      } else {
-        empInfix.placeholder = res.rows[0].infix;
-      }
-      empLastname.placeholder = res.rows[0].lastname;
-      empEmail.placeholder = res.rows[0].email;
-      if (empGender === "Male") {
-        document.getElementById("Male").checked = true;
-      } else if (empGender === "Female") {
-        document.getElementById("Female").checked = true;
-      }
-      for (let i = 0; i < empUserSelect.options.length; i++) {
-        if (parseInt(empUserSelect.options[i].value) === empUsertype) {
-          empUserSelect.options[i].selected = true;
-          break;
-        }
-      }
-    })
-    .catch((error) => {
-      console.error("Error during API request:", error);
-    });
-    
-  }}else {
+          empFirstname.placeholder = res.rows[0].firstname;
+          if (res.rows[0].infix === null) {
+            empInfix.placeholder = "";
+          } else {
+            empInfix.placeholder = res.rows[0].infix;
+          }
+          empLastname.placeholder = res.rows[0].lastname;
+          empEmail.placeholder = res.rows[0].email;
+          if (empGender === "Male") {
+            document.getElementById("Male").checked = true;
+          } else if (empGender === "Female") {
+            document.getElementById("Female").checked = true;
+          }
+          for (let i = 0; i < empUserSelect.options.length; i++) {
+            if (parseInt(empUserSelect.options[i].value) === empUsertype) {
+              empUserSelect.options[i].selected = true;
+              break;
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error during API request:", error);
+        });
+    }else {
     // Handle the case where there's no selected ID
     console.error("No employee ID found in localStorage");
   }
+  } 
 });
 
-
-
-const globalUserData = {};
+globalUserData = {};
 
 async function Userinfo() {
   try {
@@ -617,6 +637,15 @@ async function Userinfo() {
         hideAdminNavbarElements();
       }
 
+      const userName = document.querySelector("#userName");
+      let fullName = globalUserData.firstname;
+      if (globalUserData.infix !== null) {
+        fullName += " " + globalUserData.infix;
+      }
+      
+      fullName += " " + globalUserData.lastname;
+      
+      userName.innerHTML = fullName;
       // console.log(globalUserData);
     }
   } catch (error) {
@@ -650,10 +679,10 @@ document.addEventListener("DOMContentLoaded", function () {
   connectButton("prevButtonEMP", previousTablePageEMP);
   connectButton("nextButtonEMP", nextTablePageEMP);
   // connectButton("editEmployee", handleEditButtonClick);
-  connectButton("registerButton",register);
-  connectButton("deleteButtonUser",deleteUser);
-  connectButton("editEmployee",getEmployeeID);
-  connectButton("loginButton4",editUser);
+  connectButton("registerButton", register);
+  connectButton("deleteButtonUser", deleteUser);
+  connectButton("editEmployee", getEmployeeID);
+  connectButton("loginButton4", editUser);
   connectButton("my-buttonLinksStart", startMonitor);
   // connectButton("export-table", exportTableToExcel("tabel-items", "table"));
 });
@@ -681,13 +710,13 @@ function apiPy(endpoint, method) {
   // Define your API endpoint and method
   const url = `http://127.0.0.1:5000/${endpoint}`;
   const requestOptions = {
-      method: method,
+    method: method,
   };
 
   // Make the asynchronous request
   return fetch(url, requestOptions)
-      .then(response => response.json())
-      .catch(error => console.error('Error:', error));
+    .then((response) => response.json())
+    .catch((error) => console.error("Error:", error));
 }
 
 // Cookie functions stolen from w3schools (https://www.w3schools.com/js/js_cookies.asp)
@@ -697,7 +726,6 @@ function setCookie(cname, cvalue, exdays = 1) {
   let expires = "expires=" + d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"; // Set the cookie
 }
-
 
 function getCookie(cname) {
   let name = cname + "=";
