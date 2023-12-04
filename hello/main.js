@@ -168,7 +168,7 @@ function itemsLoad(currentTablePage) {
           return acc;
         }
       }, null);
-      // console.log(mostRecentItem["date_recent"]);
+      console.log(mostRecentItem);
       
 
       const currentDate = new Date();
@@ -402,7 +402,7 @@ function register() {
 }
 // here is where we add all the function we want to run when the log in successful
 document.addEventListener("DOMContentLoaded", function () {
-  const dataContainer = document.getElementById("klaas");
+  const dataContainer = document.getElementById("userName");
   const token = getCookie("token"); // Retrieve the token from the cookie
   if (!token) {
     // Handle the case where the token is missing or invalid
@@ -412,7 +412,6 @@ document.addEventListener("DOMContentLoaded", function () {
       (res) => {
         if (res.message === "success") {
           x = this.getElementById("testvuilnis");
-          dataContainer.textContent = res.decoded.user.name;
           itemsLoad(currentTablePage);
           getCity();
           getAllLinks();
@@ -764,3 +763,17 @@ function showPage(id) {
   }
   document.getElementById(id).style.display = "block";
 }
+
+function deleteCookie(cookieName) {
+  document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+const logoutLink = document.getElementById("logoutLink");
+logoutLink.addEventListener("click", function (event) {
+event.preventDefault();
+
+x = getCookie("token");
+      console.log(x); 
+deleteCookie("token");
+console.log("Token cookie deleted " + x);
+window.location.href = "login.html";
+});

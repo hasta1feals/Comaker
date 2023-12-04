@@ -60,7 +60,7 @@
             
 
           </div>
-          <a href="../src/logout.php?logout=true"><i class='bx bx-log-out loc' id="log_out"></i></a>
+          <a id="logoutLink" href=""><i class='bx bx-log-out loc' id="log_out"></i></a>
       </li>
     </ul>
   </div>
@@ -69,7 +69,7 @@
       <div class="topbar-items"> 
         <div class="searchbox">
         <i class="bx bx-search"></i>
-        <input type="search" name="search" placeholder="Search product, order">
+        <input id="myInput" onkeyup="myFunction()" type="search" name="search" placeholder="Search product, order">
       </div>
       <div class="float-right">
         <i class="bx-sizer bx bx-bell"></i>

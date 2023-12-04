@@ -254,6 +254,35 @@ window.onclick = function(event) {
       });
     });
 
+function myFunction() {
+  var input, filter, table, tr, td, i, j, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+    let rowVisible = false;
+
+    // Loop through all cells in the current row, excluding those in the thead
+    for (j = 0; j < tr[i].cells.length; j++) {
+      td = tr[i].cells[j];
+
+      // Skip filtering for th elements in the thead
+      if (td.tagName.toUpperCase() !== 'TH') {
+        txtValue = td.textContent || td.innerText;
+        // Check if the current cell's content matches the filter
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          rowVisible = true;
+          break; // No need to check other cells once a match is found in this row
+        }
+      }
+    }
+
+    // Set the display style of the row based on whether it contains a match
+    tr[i].style.display = rowVisible ? "" : "none";
+  }
+}
 
 
     
