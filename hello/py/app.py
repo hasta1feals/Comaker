@@ -52,7 +52,7 @@ def run_selenium_script():
         By.CSS_SELECTOR, password_selector).send_keys("hello")
     
 
-    browser.get("https://la.louisvuitton.com/esp-mx/productos/pulsera-lv-padlock-monogram-eclipse-nvprod4320111v/M1072E")
+    browser.get("https://me.louisvuitton.com/eng-ae/products/keepall-bandouliere-35-monogram-taurillon-leather-lg-g90-nvprod4430105v/M22765")
 
 
     time.sleep(5)
