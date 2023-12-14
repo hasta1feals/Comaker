@@ -52,7 +52,18 @@ def run_selenium_script():
         By.CSS_SELECTOR, password_selector).send_keys("hello")
     
 
-    browser.get("https://me.louisvuitton.com/eng-ae/products/keepall-bandouliere-35-monogram-taurillon-leather-lg-g90-nvprod4430105v/M22765")
+    conn = get_db()
+    cursor = conn.cursor()
+
+
+    get_query_region = "select region FROM region"
+    cursor.execute(get_query_region)
+
+    output_region = cursor.fetchall()
+    region = output_region[0][0]
+
+
+    browser.get(region)
 
 
     time.sleep(5)
@@ -61,9 +72,7 @@ def run_selenium_script():
         By.CSS_SELECTOR, '#lv-modal-target > div.lv-modal.-fixed.lv-localize-modal > div:nth-child(3) > div > div > button > svg').click()
     
 
-    conn = get_db()
-    cursor = conn.cursor()
-
+    
     get_query_city ="select city FROM country"
     cursor.execute(get_query_city)
 

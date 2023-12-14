@@ -71,6 +71,30 @@ function getCity() {
   });
 }
 
+function getRegion() {
+  api("region", "GET").then((res) => {
+    if (res.message === "success") {
+  let result =res.rows[0].region.slice(8, 10);
+  console.log(res.rows[0]);
+  if (result === "en") {
+    const countryIndex = res.rows[0].region.indexOf("Country=");
+    if (countryIndex !== -1) {
+      const countryCode = res.rows[0].region.slice(countryIndex + 8);
+      console.log(countryCode);
+
+      const region = document.querySelector("#regiontext");
+      region.innerHTML = countryCode;
+    } 
+  }else {
+      console.log(result);
+      const region = document.querySelector("#regiontext");
+      region.innerHTML = result;
+    }
+
+  }
+  });
+}
+
 function getAllLinks() {
   api("links", "GET").then((res) => {
     if (res.message === "success") {
@@ -169,7 +193,6 @@ function itemsLoad(currentTablePage) {
         }
       }, null);
       console.log(mostRecentItem);
-      
 
       const currentDate = new Date();
       const recentDate = new Date(mostRecentItem.date_recent);
@@ -316,6 +339,23 @@ function createCity() {
   });
 }
 
+function createRegion() {
+  const data = {
+    region: getValue("region-region"),
+  };
+  console.log(data);
+
+  api("region", "PATCH", data).then((res) => {
+    if (res.message == "success") {
+      // Save the received JWT in a cookie
+
+      console.log("het is gelukt");
+    } else {
+      alert("mislukt");
+    }
+  });
+}
+
 function login() {
   // Fetch data from html
   data = {
@@ -414,6 +454,7 @@ document.addEventListener("DOMContentLoaded", function () {
           x = this.getElementById("testvuilnis");
           itemsLoad(currentTablePage);
           getCity();
+          getRegion();
           getAllLinks();
           Userinfo();
           getUsersList(currentTablePageEMP);
@@ -611,11 +652,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch((error) => {
           console.error("Error during API request:", error);
         });
-    }else {
-    // Handle the case where there's no selected ID
-    console.error("No employee ID found in localStorage");
+    } else {
+      // Handle the case where there's no selected ID
+      console.error("No employee ID found in localStorage");
+    }
   }
-  } 
 });
 
 globalUserData = {};
@@ -641,9 +682,9 @@ async function Userinfo() {
       if (globalUserData.infix !== null) {
         fullName += " " + globalUserData.infix;
       }
-      
+
       fullName += " " + globalUserData.lastname;
-      
+
       userName.innerHTML = fullName;
       // console.log(globalUserData);
     }
@@ -671,6 +712,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // connectButton("start-scan", emailVal);
   connectButton("add-Links", createLinks);
   connectButton("add-city", createCity);
+  connectButton("change-region", createRegion);
   connectButton("myBtn4", deleteItemAll);
   connectButton("deletbutton123", deleteLinksAll);
   connectButton("prevButton", previousTablePage);
@@ -765,15 +807,16 @@ function showPage(id) {
 }
 
 function deleteCookie(cookieName) {
-  document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie =
+    cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 }
 const logoutLink = document.getElementById("logoutLink");
 logoutLink.addEventListener("click", function (event) {
-event.preventDefault();
+  event.preventDefault();
 
-x = getCookie("token");
-      console.log(x); 
-deleteCookie("token");
-console.log("Token cookie deleted " + x);
-window.location.href = "login.html";
+  x = getCookie("token");
+  console.log(x);
+  deleteCookie("token");
+  console.log("Token cookie deleted " + x);
+  window.location.href = "login.html";
 });

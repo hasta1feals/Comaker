@@ -264,6 +264,7 @@ app.post('/link', (req, res) => {
     const { city } = req.body;
    
     
+
       // create a new user in the database
       db.run(
         'UPDATE country SET city = ? WHERE id = 1',
@@ -277,7 +278,33 @@ app.post('/link', (req, res) => {
       );
     });
 
+    app.patch('/region', (req, res) => {
+      // get user data from request body
+      const { region } = req.body;
+     
+      
+        // create a new user in the database
+        db.run(
+          'UPDATE region SET region = ? WHERE id = 1',
+          [region],
+          function (err) {
+            if (err) {
+              return res.status(500).json({ error: 'Error setting region in region' });
+            }
+            res.json({ message: 'success' });
+          }
+        );
+      });
 
+      app.get('/region', (req, res) => {
+        db.all('SELECT * FROM region', (err, rows) => {
+          if (err) {
+            res.status(500).send({ error: 'Error fetching region' });
+          } else {
+            res.json({ message: 'success', rows });
+          }
+        });
+      });
 
 
     app.patch('/users', (req, res) => {

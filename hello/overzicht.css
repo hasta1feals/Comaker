@@ -28,14 +28,14 @@
   padding-left: 3px;
 }
 
-.categories-column .subtext {
-  color: #1366d9;
+.subtext {
+  color: #25248b;
   margin-bottom: 10px;
 }
-.total-column .subtext {
+/* .total-column .subtext {
   color: orange;
   margin-bottom: 10px;
-}
+} */
 .inline {
   display: flex;
   gap: 50px;
@@ -121,12 +121,17 @@
   border: none;
 }
 .add-products {
-  background-color: #1366d9;
+  background-color: #25248b;
   color: #ffffff;
   border: none;
 }
 .change-city {
   background-color: #ffa500;
+  color: #ffffff;
+  border: none;
+}
+.change-region {
+  background-color: #1366d9;
   color: #ffffff;
   border: none;
 }
@@ -168,6 +173,9 @@ button:hover {
   background-color: rgb(55, 202, 6);
 }
 .add-products:hover {
+  background-color: #23217e;
+}
+.change-region:hover {
   background-color: #0553c1;
 }
 .change-city:hover {
