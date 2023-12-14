@@ -307,29 +307,115 @@ app.post('/link', (req, res) => {
       });
 
 
-    app.patch('/users', (req, res) => {
-      const { firstname, lastname, email, password, id } = req.body;
+  //   app.patch('/users', (req, res) => {
+  //     const { firstname, lastname, email, password, id } = req.body;
     
+  //     bcrypt.hash(password, saltRounds, function (err, hashedPassword) {
+  //       if (err) {
+  //         return res.status(500).json({ error: 'Error hashing the password' });
+  //       }
+     
+  //     // Update user in the database
+  //     db.run(
+  //       'UPDATE users SET firstname = ?, lastname = ?, password = ?, email = ? WHERE id = ?;',
+  //       [firstname, lastname,hashedPassword, email, id],
+  //       function (err) {
+  //         if (err) {
+  //           console.error('Error updating user:', err.message);
+  //           return res.status(500).json({ error: 'Error updating user' });
+  //         }
+  //         console.log(`User with id ${id} updated successfully`);
+  //         res.json({ message: 'success' });
+  //       }
+  //     );
+  //   });
+  // });
+ 
+  app.patch('/users', (req, res) => {
+    const { firstname, lastname, email, password, infix, admin, id } = req.body;
+  
+    // Check if all fields are empty
+    if (!firstname && !lastname && !email && !password && !infix && !admin) {
+      return res.status(400).json({ error: 'No fields to update' });
+    }
+  
+    // Check if password is provided
+    if (password === undefined) {
+      // Password is not provided, proceed without hashing
+      updateUserData();
+    } else {
+      // Hash the password if provided
       bcrypt.hash(password, saltRounds, function (err, hashedPassword) {
         if (err) {
           return res.status(500).json({ error: 'Error hashing the password' });
         }
-     
-      // Update user in the database
-      db.run(
-        'UPDATE users SET firstname = ?, lastname = ?, password = ?, email = ? WHERE id = ?;',
-        [firstname, lastname,hashedPassword, email, id],
-        function (err) {
-          if (err) {
-            console.error('Error updating user:', err.message);
-            return res.status(500).json({ error: 'Error updating user' });
-          }
-          console.log(`User with id ${id} updated successfully`);
-          res.json({ message: 'success' });
+  
+        // Update user data after hashing
+        updateUserData(hashedPassword);
+      });
+    }
+  
+    function updateUserData(hashedPassword) {
+      // Construct the SQL query based on non-empty fields
+      const updateFields = [];
+      const updateValues = [];
+  
+      if (firstname) {
+        updateFields.push('firstname = ?');
+        updateValues.push(firstname);
+      }
+  
+      if (lastname) {
+        updateFields.push('lastname = ?');
+        updateValues.push(lastname);
+      }
+  
+      if (hashedPassword !== undefined) {
+        updateFields.push('password = ?');
+        updateValues.push(hashedPassword);
+      }
+  
+      if (email) {
+        updateFields.push('email = ?');
+        updateValues.push(email);
+      }
+      if (admin) {
+        updateFields.push('admin = ?');
+        updateValues.push(admin);
+      }
+  
+      // Check if infix is provided and not an empty string
+      if (infix !== undefined && infix.trim() !== "") {
+        updateFields.push('infix = ?');
+        updateValues.push(infix);
+      } else {
+        // If infix is empty or undefined, set it to null
+        updateFields.push('infix = NULL');
+      }
+  
+      // Check if there are non-empty fields to update
+      if (updateFields.length === 0) {
+        return res.status(400).json({ error: 'No fields to update' });
+      }
+  
+      // Add the user ID to the updateValues array
+      updateValues.push(id);
+  
+      // Construct and execute the SQL query
+      const sqlQuery = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?;`;
+  
+      db.run(sqlQuery, updateValues, function (err) {
+        if (err) {
+          console.error('Error updating user:', err.message);
+          return res.status(500).json({ error: 'Error updating user' });
         }
-      );
-    });
+  
+        console.log(`User with id ${id} updated successfully`);
+        res.json({ message: 'success' });
+      });
+    }
   });
+  
     
 app.put('/users/:id', (req, res) => {
   const { name, email } = req.body;

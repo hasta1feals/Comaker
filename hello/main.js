@@ -391,11 +391,18 @@ function editUser() {
       data = {
         id: employeeId,
         firstname: getValue("firstname4"),
-        infix: getValue("prefix4"),
-        lastname: getValue("lastname2"),
+        infix: getValue("infix4"),
+        lastname: getValue("lastname4"),
         email: getValue("email4"),
         password: getValue("password4"),
+        admin: getValue("Usertype"),  
       };
+      for (const key in data) {
+        if (data.hasOwnProperty(key) && !data[key]) {
+          delete data[key];
+        }
+      }
+      console.log(data);
       // Submit data to API
 
       api("users", "PATCH", data).then((res) => {
@@ -619,12 +626,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (employeeId) {
       api("employee", "POST", { id: employeeId })
         .then((res) => {
-          // console.log(res.rows[0]);
+          console.log(res.rows[0]);
 
-          const empFirstname = document.getElementById("Firstname");
-          const empInfix = document.getElementById("Infix");
-          const empLastname = document.getElementById("Lastname");
-          const empEmail = document.getElementById("email1");
+          const empFirstname = document.getElementById("firstname4");
+          const empInfix = document.getElementById("infix4");
+          const empLastname = document.getElementById("lastname4");
+          const empEmail = document.getElementById("email4");
           const empGender = res.rows[0].gender;
           const empUsertype = res.rows[0].admin;
           const empUserSelect = document.getElementById("Usertype");
