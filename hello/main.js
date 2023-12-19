@@ -74,24 +74,23 @@ function getCity() {
 function getRegion() {
   api("region", "GET").then((res) => {
     if (res.message === "success") {
-  let result =res.rows[0].region.slice(8, 10);
-  console.log(res.rows[0]);
-  if (result === "en") {
-    const countryIndex = res.rows[0].region.indexOf("Country=");
-    if (countryIndex !== -1) {
-      const countryCode = res.rows[0].region.slice(countryIndex + 8);
-      console.log(countryCode);
+      let result = res.rows[0].region.slice(8, 10);
+      console.log(res.rows[0]);
+      if (result === "en") {
+        const countryIndex = res.rows[0].region.indexOf("Country=");
+        if (countryIndex !== -1) {
+          const countryCode = res.rows[0].region.slice(countryIndex + 8);
+          console.log(countryCode);
 
-      const region = document.querySelector("#regiontext");
-      region.innerHTML = countryCode;
-    } 
-  }else {
-      console.log(result);
-      const region = document.querySelector("#regiontext");
-      region.innerHTML = result;
+          const region = document.querySelector("#regiontext");
+          region.innerHTML = countryCode;
+        }
+      } else {
+        console.log(result);
+        const region = document.querySelector("#regiontext");
+        region.innerHTML = result;
+      }
     }
-
-  }
   });
 }
 
@@ -395,7 +394,7 @@ function editUser() {
         lastname: getValue("lastname4"),
         email: getValue("email4"),
         password: getValue("password4"),
-        admin: getValue("Usertype"),  
+        admin: getValue("Usertype"),
       };
       for (const key in data) {
         if (data.hasOwnProperty(key) && !data[key]) {
@@ -514,45 +513,49 @@ function getUsersList(currentTablePageEMP) {
       const startIndexEMP = (currentTablePageEMP - 1) * TableRowsPerPage;
       const endIndexEMP = startIndexEMP + TableRowsPerPage;
       for (let i = startIndexEMP; i < endIndexEMP && i < res.length; i++) {
-        const row = document.createElement("tr");
+        console.log(res[i].admin);
+        if (res[i].admin !== 2) {
+          // console.log("show");
 
-        // Add a hidden checkbox with the user ID
-        const checkboxCell = document.createElement("td");
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.className = "hiddenCheckbox";
-        checkbox.value = res[i].id;
-        checkboxCell.appendChild(checkbox);
-        row.appendChild(checkboxCell);
+          const row = document.createElement("tr");
 
-        // Combine "firstname," "infix," and "lastname" into a single <td>
-        const nameCell = document.createElement("td");
-        const fullName = [res[i].firstname, res[i].infix, res[i].lastname]
-          .filter(Boolean)
-          .join(" ");
-        nameCell.textContent = fullName;
-        row.appendChild(nameCell);
+          // Add a hidden checkbox with the user ID
+          const checkboxCell = document.createElement("td");
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.className = "hiddenCheckbox";
+          checkbox.value = res[i].id;
+          checkboxCell.appendChild(checkbox);
+          row.appendChild(checkboxCell);
 
-        // Exclude the "id" field from being displayed
-        for (const key in res[i]) {
-          if (
-            key !== "id" &&
-            key !== "firstname" &&
-            key !== "infix" &&
-            key !== "lastname" &&
-            key !== "password"
-          ) {
-            const cell = document.createElement("td");
-            row.appendChild(cell);
-            if (key === "admin") {
-              cell.textContent = res[i][key] === 1 ? "Admin" : "Employee";
-            } else {
-              cell.textContent = res[i][key];
+          // Combine "firstname," "infix," and "lastname" into a single <td>
+          const nameCell = document.createElement("td");
+          const fullName = [res[i].firstname, res[i].infix, res[i].lastname]
+            .filter(Boolean)
+            .join(" ");
+          nameCell.textContent = fullName;
+          row.appendChild(nameCell);
+
+          // Exclude the "id" field from being displayed
+          for (const key in res[i]) {
+            if (
+              key !== "id" &&
+              key !== "firstname" &&
+              key !== "infix" &&
+              key !== "lastname" &&
+              key !== "password"
+            ) {
+              const cell = document.createElement("td");
+              row.appendChild(cell);
+              if (key === "admin") {
+                cell.textContent = res[i][key] === 1 ? "Admin" : "Employee";
+              } else {
+                cell.textContent = res[i][key];
+              }
             }
           }
+          employeeTable.appendChild(row);
         }
-
-        employeeTable.appendChild(row);
       }
 
       // Attach event listener to each checkbox
@@ -676,7 +679,7 @@ async function Userinfo() {
       Object.assign(globalUserData, userDataWithoutPassword);
 
       // Check if the user is an admin
-      if (admin === 1) {
+      if (admin === 1 || admin === 3) {
         // Show the admin-only elements in the sidebar
         showAdminNavbarElements();
       } else {
