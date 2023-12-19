@@ -679,7 +679,7 @@ async function Userinfo() {
       Object.assign(globalUserData, userDataWithoutPassword);
 
       // Check if the user is an admin
-      if (admin === 1 || admin === 3) {
+      if (admin === 1 || admin === 2) {
         // Show the admin-only elements in the sidebar
         showAdminNavbarElements();
       } else {
