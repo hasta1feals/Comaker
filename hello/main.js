@@ -75,7 +75,7 @@ function getRegion() {
   api("region", "GET").then((res) => {
     if (res.message === "success") {
       let result = res.rows[0].region.slice(8, 10);
-      console.log(res.rows[0]);
+      // console.log(res.rows[0]);
       if (result === "en") {
         const countryIndex = res.rows[0].region.indexOf("Country=");
         if (countryIndex !== -1) {
@@ -86,7 +86,7 @@ function getRegion() {
           region.innerHTML = countryCode;
         }
       } else {
-        console.log(result);
+        // console.log(result);
         const region = document.querySelector("#regiontext");
         region.innerHTML = result;
       }
@@ -164,151 +164,253 @@ function deleteLinksAll() {
   });
 }
 
+
 const TableRowsPerPage = 9;
 let currentTablePage = 1;
+let originalRows = []; 
+
+let filteredRows = []; 
 
 function itemsLoad(currentTablePage) {
-  // console.log(currentTablePage);
   api("items", "GET")
     .then((res) => {
-      // console.log(res.rows); // Log the entire response to the console
-      // innerhtmls
-      totalPages = res.rows.length / TableRowsPerPage;
-      totalPageNumber = Math.ceil(totalPages);
+      const tableBody = document.querySelector("#myTable tbody");
+      tableBody.innerHTML = "";
 
-      const productAmount = document.querySelector("#product-amount");
-      productAmount.innerHTML = res.rows.length;
-
-      // console.log(res.rows);
-
-      const mostRecentItem = res.rows.reduce((acc, current) => {
-        const currentDate = new Date(current.date_recent);
-        const accDate = acc ? new Date(acc.date_recent) : null;
-
-        if (!accDate || currentDate > accDate) {
-          return current;
-        } else {
-          return acc;
+      // Update the stock status in res.rows
+      res.rows.forEach((row) => {
+        if (row.lv_stock === "Sin existencias") {
+          row.lv_stock = "Out of stock";
+        } else if (row.lv_stock === "En existencia") {
+          row.lv_stock = "In stock";
         }
-      }, null);
-      console.log(mostRecentItem);
+      });
 
-      const currentDate = new Date();
-      const recentDate = new Date(mostRecentItem.date_recent);
-      const timeDifferenceInMilliseconds = Math.abs(currentDate - recentDate);
-      const timeDifferenceInSeconds = timeDifferenceInMilliseconds / 1000;
-      const timeDifferenceInMinutes = timeDifferenceInSeconds / 60;
-      const timeDifferenceInHours = timeDifferenceInMinutes / 60;
+      // Store the original rows for filtering
+      originalRows = res.rows;
 
-      let formattedTimeDifference;
+      // Filter the rows based on the current search input
+      const filteredRows = filterRows(originalRows);
 
-      if (timeDifferenceInHours < 24) {
-        formattedTimeDifference = `${Math.round(
-          timeDifferenceInHours
-        )} hours ago`;
-      } else if (timeDifferenceInHours < 720) {
-        // 30 dagen * 24 uren
-        formattedTimeDifference = `${Math.round(
-          timeDifferenceInHours / 24
-        )} days ago`;
-      } else if (timeDifferenceInHours < 17520) {
-        // 730 dagen * 24 uren
-        formattedTimeDifference = `${Math.round(
-          timeDifferenceInHours / 720
-        )} months ago`;
-      } else {
-        formattedTimeDifference = `${Math.round(
-          timeDifferenceInHours / 17520
-        )} years ago`;
-      }
+      // Calculate total number of pages
+      totalPageNumber = Math.ceil(filteredRows.length / TableRowsPerPage);
 
-      // console.log(formattedTimeDifference);
+      // Update UI elements (product amount, last scanned, etc.)
+      updateUI(res.rows);
 
-      const lastScanned = document.querySelector("#date");
-      lastScanned.innerHTML = formattedTimeDifference;
+      // Display the current page of filtered rows
+      displayRows(filteredRows, currentTablePage);
 
-      const items = res.rows;
-      const outOfStockCount = items.filter(
-        (item) => item.lv_stock === "Sin existencias"
-      ).length;
-      const outOfStock = document.querySelector("#out-of-stock");
-      outOfStock.innerHTML = outOfStockCount;
-      const inStock = document.querySelector("#in-stock");
-      inStock.innerHTML = items.length - outOfStockCount;
+      // Update pagination buttons
+      updatePaginationButtons(filteredRows.length, currentTablePage);
 
-      const pageCounter = document.querySelector("#pageAmount");
-      pageCounter.innerHTML = currentTablePage + "/" + totalPageNumber;
-      // on succes do this
-      if (res.message === "success") {
-        const tableBody = document.querySelector("#myTable tbody");
-        tableBody.innerHTML = "";
-
-        const startIndex = (currentTablePage - 1) * TableRowsPerPage;
-        const endIndex = startIndex + TableRowsPerPage;
-
-        for (let i = startIndex; i < endIndex && i < res.rows.length; i++) {
-          const row = document.createElement("tr");
-          for (const key in res.rows[i]) {
-            //exlcude the id field
-            if (key !== "id") {
-              const cell = document.createElement("td");
-
-              //translate in stock
-              if (key === "lv_stock") {
-                cell.textContent =
-                  res.rows[i][key] === "Sin existencias"
-                    ? "Out of stock"
-                    : "In Stock";
-                cell.className =
-                  res.rows[i][key] === "Sin existencias"
-                    ? "out-of-stock"
-                    : "in-stock";
-              } else {
-                cell.textContent = res.rows[i][key];
-              }
-              row.appendChild(cell);
-            }
-          }
-          tableBody.appendChild(row);
-        }
-        rowCount = res.rows.length;
-        updatePaginationButtons(rowCount, endIndex);
-      }
+      // Update page amount
+      document.querySelector("#pageAmount").innerHTML = currentTablePage + "/" + totalPageNumber;
     })
     .catch((error) => {
       console.error("Error fetching items:", error);
     });
 }
+
+
+
+
+
+function getMostRecentItem(rows) {
+  if (rows.length === 0) {
+    return null; 
+  }
+
+  const mostRecentItem = rows.reduce((mostRecent, currentItem) => {
+    const currentDate = new Date(currentItem.date_recent);
+    const accDate = mostRecent ? new Date(mostRecent.date_recent) : null;
+
+    if(!accDate || currentDate > accDate){
+      return currentItem;
+    }else{
+      return mostRecent;
+    }
+  }, null);
+
+  return mostRecentItem;
+}
+
+function calculateTimeDifference(timerecent) {
+  if (!timerecent ) {
+    return "N/A"; 
+  }
+
+  const currentDate = new Date();
+  const recentDate = new Date(timerecent);
+  const timeDifferenceInMilliseconds = Math.abs(currentDate - recentDate);
+  const timeDifferenceInSeconds = timeDifferenceInMilliseconds / 1000;
+  const timeDifferenceInMinutes = timeDifferenceInSeconds / 60;
+  const timeDifferenceInHours = timeDifferenceInMinutes / 60;
+
+  let formattedTimeDifference;
+
+  if (timeDifferenceInHours < 1) {
+    formattedTimeDifference = `${Math.round(
+      timeDifferenceInMinutes
+    )} minutes ago`;
+  } else if (timeDifferenceInHours < 24) {
+    formattedTimeDifference = `${Math.round(
+      timeDifferenceInHours
+    )} hours ago`;
+  } else if (timeDifferenceInHours < 720) {
+    formattedTimeDifference = `${Math.round(
+      timeDifferenceInHours / 24
+    )} days ago`;
+  } else if (timeDifferenceInHours < 17520) {
+    formattedTimeDifference = `${Math.round(
+      timeDifferenceInHours / 720
+    )} months ago`;
+  } else {
+    formattedTimeDifference = `${Math.round(
+      timeDifferenceInHours / 17520
+    )} years ago`;
+  }
+
+  return formattedTimeDifference;
+}
+
+
+function getStockCounts(rows) {
+  // Assuming each item has a 'lv_stock' property indicating the stock status
+  return rows.reduce(
+    (counts, item) => {
+      if (item.lv_stock === "Out of stock") {
+        counts.outOfStockCount += 1;
+      } else if (item.lv_stock === "In stock") {
+        counts.inStockCount += 1;
+      }
+      return counts;
+    },
+    { outOfStockCount: 0, inStockCount: 0 }
+  );
+}
+
+function updateUI(rows) {
+  const productAmount = document.querySelector("#product-amount");
+  const outOfStock = document.querySelector("#out-of-stock");
+  const inStock = document.querySelector("#in-stock");
+
+  const { outOfStockCount, inStockCount } = getStockCounts(rows);
+
+  productAmount.innerHTML = rows.length;
+  outOfStock.innerHTML = outOfStockCount;
+  inStock.innerHTML = inStockCount;
+
+  const mostRecentItem = getMostRecentItem(rows);
+
+  timerecent = mostRecentItem["date_recent"];
+  const formattedTimeDifference = calculateTimeDifference(timerecent);
+  const lastScanned = document.querySelector("#date")
+  lastScanned.innerHTML = formattedTimeDifference;
+
+  const pageCounter = document.querySelector("#pageAmount");
+  pageCounter.innerHTML = currentTablePage + "/" + totalPageNumber;
+}
+
+
+function filterRows() {
+  // Logic to filter rows based on the current search input
+  const input = document.getElementById("searchInput");
+  const filter = input.value.toUpperCase();
+
+  const rowsToFilter = filteredRows.length > 0 ? filteredRows : originalRows;
+
+  if (!filter) {
+    return rowsToFilter; // If no filter, return all rows
+  }
+
+  return rowsToFilter.filter((row) => {
+    // Custom logic to determine if a row should be included in the filter
+    // Modify this logic based on your specific requirements
+    return Object.values(row).some((value) => {
+      const stringValue = String(value).toUpperCase();
+      return stringValue.includes(filter);
+    });
+  });
+}
+function displayRows(rows, currentPage) {
+  const startIndex = (currentPage - 1) * TableRowsPerPage;
+  const endIndex = startIndex + TableRowsPerPage;
+
+  const tableBody = document.querySelector("#myTable tbody");
+  tableBody.innerHTML = ""; // Clear the existing table
+
+  for (let i = startIndex; i < endIndex && i < rows.length; i++) {
+    const row = document.createElement("tr");
+
+    for (const key in rows[i]) {
+      // Exclude the id field
+      if (key !== "id") {
+        const cell = document.createElement("td");
+
+        // Translate lv_stock
+        if (key === "lv_stock") {
+          const stockStatus = rows[i][key] === "Out of stock" ? "Out of stock" : "In stock";
+          cell.textContent = stockStatus;
+          cell.className = rows[i][key] === "Out of stock" ? "out-of-stock" : "in-stock";
+        } else {
+          cell.textContent = rows[i][key];
+        }
+        row.appendChild(cell);
+      }
+    }
+
+    tableBody.appendChild(row);
+  }
+}
+
+
+
 function nextTablePage() {
-  currentTablePage++;
-  // console.log(currentTablePage);
-  itemsLoad(currentTablePage);
-  updatePaginationButtons(currentTablePage);
+  if (currentTablePage < totalPageNumber) {
+    currentTablePage++;
+    itemsLoad(currentTablePage);
+  }
 }
 
 function previousTablePage() {
   if (currentTablePage > 1) {
     currentTablePage--;
-    console.log(currentTablePage);
     itemsLoad(currentTablePage);
-    updatePaginationButtons(currentTablePage);
   }
 }
 
-function updatePaginationButtons(rowCount, endIndex, currentTablePage) {
+function updatePaginationButtons(rowCount, currentPage) {
+  totalPageNumber = Math.ceil(rowCount / TableRowsPerPage);
+
   const prevButton = document.getElementById("prevButton");
   const nextButton = document.getElementById("nextButton");
 
-  prevButton.disabled = currentTablePage === 1;
-  nextButton.disabled = rowCount < endIndex;
+  prevButton.disabled = currentPage === 1;
+  nextButton.disabled = currentPage >= totalPageNumber;
 }
 
+
+function applyFilterOnPageChange() {
+  // Apply the filter again when changing the page
+  const filteredRows = filterRows(originalRows);
+  displayRows(filteredRows, currentTablePage);
+  updatePaginationButtons(filteredRows.length, currentTablePage);
+  updateUI(filteredRows); // Update the UI after filtering
+}
+
+function myFunction() {
+  // Apply the filter again when the user types in the search input
+  applyFilterOnPageChange();
+}
+
+
+
 function createLinks() {
-  console.log("createLinks");
+  // console.log("createLinks");
   const data = {
     link: getValue("links-links"),
   };
-  console.log(data);
 
   api("link", "POST", data).then((res) => {
     if (res.message == "success") {
@@ -596,17 +698,17 @@ function previousTablePageEMP() {
   }
 }
 
-function updatePaginationButtonsEMP(
-  rowCount,
-  endIndexEMP,
-  currentTablePageEMP
-) {
-  const prevButton = document.getElementById("prevButtonEMP");
-  const nextButton = document.getElementById("nextButtonEMP");
+// function updatePaginationButtonsEMP(
+//   rowCount,
+//   endIndexEMP,
+//   currentTablePageEMP
+// ) {
+//   const prevButton = document.getElementById("prevButtonEMP");
+//   const nextButton = document.getElementById("nextButtonEMP");
 
-  prevButton.disabled = currentTablePageEMP === 1;
-  nextButton.disabled = rowCount <= endIndexEMP;
-}
+//   prevButton.disabled = currentTablePageEMP === 1;
+//   nextButton.disabled = rowCount <= endIndexEMP;
+// }
 
 function getEmployeeID() {
   console.log(selectedIds);

@@ -11,7 +11,6 @@
   <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
 
   <body>
@@ -48,7 +47,7 @@
           <div class="categories-column">
             <h4 class="subtext">Region</h4>
             <p  id="regiontext" class="amount">test</p>
-            <p id="date" class="checked">0</p>
+            <!-- <p id="date" class="checked">0</p> -->
           </div>
       </div>
       <div class="column">
@@ -295,35 +294,6 @@ window.onclick = function(event) {
       });
     });
 
-function myFunction() {
-  var input, filter, table, tr, td, i, j, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
-
-  for (i = 0; i < tr.length; i++) {
-    let rowVisible = false;
-
-    // Loop through all cells in the current row, excluding those in the thead
-    for (j = 0; j < tr[i].cells.length; j++) {
-      td = tr[i].cells[j];
-
-      // Skip filtering for th elements in the thead
-      if (td.tagName.toUpperCase() !== 'TH') {
-        txtValue = td.textContent || td.innerText;
-        // Check if the current cell's content matches the filter
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          rowVisible = true;
-          break; // No need to check other cells once a match is found in this row
-        }
-      }
-    }
-
-    // Set the display style of the row based on whether it contains a match
-    tr[i].style.display = rowVisible ? "" : "none";
-  }
-}
 
 
     
