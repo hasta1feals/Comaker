@@ -16,4 +16,4 @@ A web application built with Node.js to check the stock availability of Louis Vu
 - Clone this repository to your local machine.
 
 ```bash
-git clone [https://github.com/your-username/lv-stock-checker.git](https://github.com/hasta1feals/Comaker.git)https://github.com/hasta1feals/Comaker.git
+git clone (https://github.com/hasta1feals/Comaker.git)https://github.com/hasta1feals/Comaker.git)
