@@ -42,8 +42,17 @@ def run_selenium_script():
     browser.get('https://mail.google.com/mail/u/0/#inbox')
     browser.get("https://la.louisvuitton.com/esp-mx/homepage")
 
+  
+    browser.find_element(
+        By.CSS_SELECTOR, '#ucm-banner > div > div > div.ucm-head-tools > ul > li:nth-child(3) > a').click()
+    time.sleep(1)
+
+
+            
+
     browser.find_element(
         By.CSS_SELECTOR, '#header > div > div > nav.lv-header__utility > ul > li.lv-header__utility-item.-search > div > button > svg').click()
+        
     
 
     password_selector = "#searchHeaderInput"
@@ -69,7 +78,7 @@ def run_selenium_script():
     time.sleep(5)
     #dit komt alleen 1x voor dus een if else statement maken of een do while idk iets in dei kant
     browser.find_element(
-        By.CSS_SELECTOR, '#lv-modal-target > div.lv-modal.-fixed.lv-localize-modal > div:nth-child(3) > div > div > button > svg').click()
+                By.CSS_SELECTOR, '#lv-modal-target > div.lv-modal.-popin.lv-localize-modal > div:nth-child(3) > div > div > button > svg').click()
     
 
     
